@@ -1,0 +1,81 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background-image: url(https://i.pinimg.com/736x/a1/30/ec/a130ec945e785a703cfbb2f9139efff6.jpg);
+  background-size: cover;
+  background-position: center;  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.signup-container {
+  background: rgba(30, 30, 30, 0.9);
+  border: 2px solid #bfa76f;
+  padding: 40px 50px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(191, 167, 111, 0.3);
+}
+
+/*heading */
+.signup-container h2 {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+/*input*/
+.signup-container input[type="text"],
+.signup-container input[type="email"],
+.signup-container input[type="number"],
+.signup-container input[type="password"] {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.signup-container input[type="text"]:focus,
+.signup-container input[type="email"]:focus,
+.signup-container input[type="number"]:focus,
+.signup-container input[type="password"]:focus {
+  border-color: #9d1e1e; 
+}
+
+/*button*/
+.signup-container button {
+  width: 100%;
+  background-color: #9d1e1e;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.signup-container button:hover {
+  background-color: #285e61; 
+}
+
+/*login link*/
+.login-link {
+  margin-top: 20px;
+  display: block;
+  font-size: 14px;
+  color: #0008ff;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}

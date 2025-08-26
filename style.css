@@ -1,0 +1,272 @@
+/*base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: #f0f0f0;
+  background-color: #121212;
+  margin: 0;
+  padding: 0;
+}
+
+/*sidebar*/
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100%;
+  background: #1e1e1e;
+  padding: 1rem;
+  color: #f0f0f0;
+  border-right: 1px solid #444;
+  z-index: 1000;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+  color: #FFD700;
+}
+
+.sidebar-link {
+  color: #f0f0f0;
+  display: block;
+  margin: 0.5rem 0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.sidebar-link:hover {
+  color: #C62828;
+}
+
+header {
+  background-image: url(https://i.pinimg.com/736x/bb/3d/cd/bb3dcde1adbe5e6f52b4df5600bd2358.jpg);
+  background-size: cover;
+  background-position: center;
+  color: #FFD700;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: 250px; 
+}
+
+#user-area {
+  color: white;
+}
+
+/*main layout */
+main {
+  margin-left: 200px; /*keep aligned with sidebar */
+  padding: 20px;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 1rem;
+  padding: 0 1rem;
+  color: #f0f0f0;
+}
+
+#category-select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #e2af38;
+}
+
+/*products grid */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.product-card {
+  background-color: #111;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+}
+
+.product-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.product-card h3 {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  color: #FFD700;
+}
+
+.product-card p {
+  font-weight: bold;
+  color: #e0bb00;
+  margin-bottom: 0.5rem;
+}
+
+.product-card button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #000000;
+  color: white;
+  border: 1px solid #bfa76f;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.product-card button:hover {
+  background: #C62828;
+  color: white;
+  border: 1px solid #C62828;
+  transform: scale(1.03);
+}
+
+.cart {
+  position: fixed;
+  top: 20%;
+  right: 10%;
+  background: #1e1e1e;
+  border: 1px solid #bfa76f;
+  padding: 1rem;
+  display: none;
+  z-index: 10;
+  width: 300px;
+  box-shadow: 0 5px 15px rgba(191, 167, 111, 0.4);
+  color: #f0f0f0;
+}
+
+.cart ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cart ul li {
+  margin: 0.5rem 0;
+}
+
+/*modal (product details popup)*/
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1e1e1e;
+  border-radius: 15px;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 400px;
+  display: none;
+  box-shadow: 0 10px 25px rgba(191, 167, 111, 0.3);
+  text-align: center;
+  color: #f0f0f0;
+  z-index: 9999;
+}
+
+.modal img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  border: 2px solid #C62828;
+}
+
+.modal h3 {
+  margin: 0.5rem 0 0.2rem;
+  font-size: 1.2rem;
+  color: #f0f0f0;
+}
+
+.modal p {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.modal-close {
+  background: black;
+  color: #f0f0f0;
+  padding: 0.4rem 1rem;
+  margin-top: 1rem;
+  border: 1px solid #bfa76f;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.modal-close:hover {
+  background: #C62828;
+  color: white;
+  border-color: #C62828;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    box-shadow: none;
+    padding: 0.5rem 1rem;
+  }
+
+  main {
+    margin-left: 0;
+    padding-top: 1rem;
+  }
+
+  .products {
+    grid-template-columns: 1fr;
+  }
+
+  .product-card {
+    margin-bottom: 1rem;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-link,
+button,
+a.button {
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}

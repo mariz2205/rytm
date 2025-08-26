@@ -1,0 +1,26 @@
+[
+    {
+        "fullname": "marizmacasa",
+        "username": "mariz",
+        "email": "marizmacasa22@gmail.com",
+        "password": "mariz22",
+        "phone": "09772115151",
+        "address": "Bunsuran 1st Pandi Bulacan"
+    },
+    {
+        "fullname": "justine sandiego",
+        "username": "jaja",
+        "email": "justine@gmail.com",
+        "password": "maricejaja",
+        "phone": "09878642542",
+        "address": "Bunsuran 1st Pandi Bulacan"
+    },
+    {
+        "fullname": "Florenstine Delfin",
+        "username": "flor",
+        "email": "florenstine@gmail.com",
+        "password": "flofloflo",
+        "phone": "09898858585",
+        "address": "Bunsuran 1st Pandi Bulacan"
+    }
+]
