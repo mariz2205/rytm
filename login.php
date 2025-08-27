@@ -9,11 +9,12 @@ $users = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), tr
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
 
     foreach ($users as $user) {
-        if (($user['email'] === $username || $user['fullname'] === $username) && $user['password'] === $password) {
+        // Check for matching email or fullname, and verify the hashed password
+        if (($user['email'] === $username || $user['fullname'] === $username) && password_verify($password, $user['password'])) {
             $_SESSION["email"] = $user['email'];
             $_SESSION["fullname"] = $user['fullname'];
 

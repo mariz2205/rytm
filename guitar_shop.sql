@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 26, 2025 at 02:00 PM
+-- Generation Time: Aug 27, 2025 at 12:14 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,12 +29,17 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `address` (
   `AddressCode` int(10) NOT NULL,
-  `BuildingNo.` int(10) NOT NULL,
-  `StreetName` varchar(25) NOT NULL,
   `Barangay` varchar(25) NOT NULL,
   `City` varchar(25) NOT NULL,
   `Province` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `address`
+--
+
+INSERT INTO `address` (`AddressCode`, `Barangay`, `City`, `Province`) VALUES
+(1, 'Bunsuran 1st', 'Pandi', 'Bulacan');
 
 -- --------------------------------------------------------
 
@@ -69,6 +74,15 @@ CREATE TABLE `customerdetails` (
   `ContactNo.` varchar(14) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
+--
+-- Dumping data for table `customerdetails`
+--
+
+INSERT INTO `customerdetails` (`CustomerID`, `Username`, `LastName`, `FirstName`, `AddressCode`, `Email`, `ContactNo.`) VALUES
+(1, 'mariz', 'Macasa', 'Mariz', 1, 'marizmacasa22@gmail.com', '09772115151'),
+(2, 'jaja', 'Sandiego', 'Justine', 1, 'justine@gmail.com', '09878642542'),
+(3, 'flor', 'Delfin', 'Florenstine', 1, 'florenstine@gmail.com', '09898858585');
+
 -- --------------------------------------------------------
 
 --
@@ -94,6 +108,15 @@ CREATE TABLE `passwords` (
   `CustomerID` int(10) NOT NULL,
   `user_pass` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `passwords`
+--
+
+INSERT INTO `passwords` (`CustomerID`, `user_pass`) VALUES
+(1, '$2y$10$Du74YkRruYoi7xErYQFuSOG7/hySfcpnEl7Swekhq6YZOvICNv7/a'),
+(2, '$2y$10$MFZbeOJs4ueYGM597t/XjuaKwb6qfNUNy1Xevs1B6L54AHj1eq5Rm'),
+(3, '$2y$10$FRAaESf10xnftyGZzD32KewpctgP2Qg.4lBpcxmhqRSbyFh5n8BaC');
 
 -- --------------------------------------------------------
 
@@ -204,7 +227,7 @@ ALTER TABLE `shoppingcart`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-  MODIFY `AddressCode` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `AddressCode` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `checkoutinfo`
@@ -216,7 +239,7 @@ ALTER TABLE `checkoutinfo`
 -- AUTO_INCREMENT for table `customerdetails`
 --
 ALTER TABLE `customerdetails`
-  MODIFY `CustomerID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `CustomerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orderlist`
