@@ -36,21 +36,6 @@
   padding-bottom: 0.3rem;
 }
 
-.sidebar-profile {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.sidebar-user-status {
-  font-size: 0.9rem;
-  color: #ddd;
-}
-
-.sidebar-user-status strong {
-  display: block;
-  color: #FFD700;
-  font-size: 1rem;
-}
 
 .sidebar-link,
 .sidebar-button {
