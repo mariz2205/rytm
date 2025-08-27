@@ -92,7 +92,6 @@ foreach ($cart as $id => $qty) {
 <div class="sidebar">
   <div class="sidebar-profile">
     <img src="avatar.png" alt="User Avatar" class="sidebar-avatar">
-    <div class="sidebar-user-status"><strong>Anna Cruz</strong> Online</div>
   </div>
 
   <div class="sidebar-content">
