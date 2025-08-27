@@ -48,8 +48,14 @@ function getValue($array, $key, $default = '') {
 <main>
     <?php
     $validOrders = array_filter($orders, function($o) {
-        return isset($o['order_id']) && !empty($o['items']) && is_array($o['items']);
-    });
+    return isset($o['order_id']) &&
+           !empty($o['items']) &&
+           is_array($o['items']) &&
+           isset($_SESSION['user_id']) &&
+           isset($o['user_id']) &&
+           $o['user_id'] == $_SESSION['user_id'];
+});
+
     ?>
 
     <?php if (empty($validOrders)): ?>

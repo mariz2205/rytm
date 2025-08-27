@@ -23,7 +23,6 @@ $products = json_decode(file_get_contents("products.json"), true);
   <div class="sidebar-content">
 
     <div class="sidebar-profile">
-      <img src="assets/avatar.png" alt="User Avatar" class="sidebar-avatar">
       <?php if (isset($_SESSION['email'])): ?>
         <div class="sidebar-user-status">
           <strong><?= htmlspecialchars($_SESSION['fullname'] ?? $_SESSION['email'])?></strong>

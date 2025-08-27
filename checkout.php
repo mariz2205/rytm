@@ -49,7 +49,6 @@ if ($productId) {
 <div class="sidebar">
     <div class="sidebar-content">
         <div class="sidebar-profile">
-            <img src="avatar.png" alt="Avatar" class="sidebar-avatar">
             <div class="sidebar-user-status">
                 <strong><?= htmlspecialchars($_SESSION['email']) ?></strong>
                 Online

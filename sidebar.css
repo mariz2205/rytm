@@ -41,14 +41,6 @@
   margin-bottom: 1rem;
 }
 
-.sidebar-avatar {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: 2px solid #FFD700;
-  margin-bottom: 0.5rem;
-}
-
 .sidebar-user-status {
   font-size: 0.9rem;
   color: #ddd;
