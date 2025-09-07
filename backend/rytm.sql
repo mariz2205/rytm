@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2025 at 12:14 PM
+-- Generation Time: Sep 01, 2025 at 07:55 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `guitar shop`
+-- Database: `rytm`
 --
 
 -- --------------------------------------------------------
@@ -128,10 +128,33 @@ CREATE TABLE `productdetails` (
   `ProductID` int(10) NOT NULL,
   `ProductDescription` varchar(255) NOT NULL,
   `ProductName` varchar(25) NOT NULL,
+  `Image` varchar(255) DEFAULT NULL,
+  `Category` varchar(25) NOT NULL,
   `Stock` int(3) NOT NULL,
   `ProductPrice` decimal(10,2) NOT NULL,
   `SellerID` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `productdetails`
+--
+
+INSERT INTO `productdetails` (`ProductID`, `ProductDescription`, `ProductName`, `Image`, `Category`, `Stock`, `ProductPrice`, `SellerID`) VALUES
+(1, 'A rich, full-sounding 12-string dreadnought ideal for experienced players.', 'Takamine GD37CE 12-String', 'product1.jpg', 'Acoustic', 102, 3200.00, 1),
+(2, 'A classic black Fender acoustic—great for both beginners and intermediate players.', 'Fender CD-60S- Black', 'product2.jpg', 'Acoustic', 76, 3500.00, 1),
+(3, 'Compact dreadnought design, ideal for younger players or travelers.', 'Oscar Schmidt OG1P-A 3/4 ', 'product3.jpg', 'Acoustic', 89, 2900.00, 1),
+(4, 'A sleek, beginner-friendly electric guitar with a classic Strat shape.', 'Dimavery ST-312 Electric ', 'product4.jpg', 'Electric', 61, 5800.00, 1),
+(5, 'A premium Stratocaster with Clapton signature sound and feel.', 'Fender Artist Series Eric', 'product5.jpg', 'Electric', 47, 6900.00, 1),
+(6, 'Bold design and premium build for modern electric guitarists.', 'JS-380 Roasted Poplar Bod', 'product6.jpg', 'Electric', 38, 7500.00, 1),
+(7, 'Colorful soprano ukulele—perfect for casual strumming or learning.', 'Ukulele 21 inch (Soprano)', 'product7.jpg', 'Ukulele', 85, 400.00, 1),
+(8, 'Water-resistant, fun, and travel-friendly ukulele.', 'Kala Waterman Soprano SWG', 'product8.jpg', 'Ukulele', 77, 450.00, 1),
+(9, 'Eco-friendly ukulele with a unique bamboo look.', 'Kala Ukadelic UK-BAMBOO', 'product9.jpg', 'Ukulele', 85, 350.00, 1),
+(10, 'Eye-catching shark-shaped capo with strong clamp.', 'Zinc Alloy Shark', 'product10.jpg', 'Capo', 90, 350.00, 1),
+(11, 'Reliable capo from Dunlop—simple and effective.', 'Dunlop Guitar Capo', 'product11.jpg', 'Capo', 90, 300.00, 1),
+(12, 'Quick-release capo that’s easy to adjust on stage.', 'Tanglewood Speedbar', 'product12.jpg', 'Capo', 90, 300.00, 1),
+(13, 'Classic red pearl pick for smooth tone and grip.', 'Celluloid Red Pearl', 'product13.jpg', 'Pick', 90, 150.00, 1),
+(14, 'Durable and sleek plectrum made from Delrin.', 'Exotic Plectrums Delrin', 'product14.jpg', 'Pick', 90, 100.00, 1),
+(15, 'Stylish tribal design with solid tone performance.', 'Petroglyph Spiral Tribal', 'product15.jpg', 'Pick', 90, 100.00, 1);
 
 -- --------------------------------------------------------
 
@@ -144,8 +167,15 @@ CREATE TABLE `sellerinfo` (
   `SellerLN` varchar(25) NOT NULL,
   `SellerFN` varchar(25) NOT NULL,
   `SellerEmail` varchar(25) NOT NULL,
-  `SellerNo.` varchar(25) NOT NULL
+  `SellerContactNo.` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `sellerinfo`
+--
+
+INSERT INTO `sellerinfo` (`SellerID`, `SellerLN`, `SellerFN`, `SellerEmail`, `SellerContactNo.`) VALUES
+(1, 'macasa', 'mariz', 'marizmacasa22@gmail.com', '09772115151');
 
 -- --------------------------------------------------------
 
@@ -251,13 +281,13 @@ ALTER TABLE `orderlist`
 -- AUTO_INCREMENT for table `productdetails`
 --
 ALTER TABLE `productdetails`
-  MODIFY `ProductID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `ProductID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `sellerinfo`
 --
 ALTER TABLE `sellerinfo`
-  MODIFY `SellerID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `SellerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `shoppingcart`

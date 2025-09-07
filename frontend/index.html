@@ -1,8 +1,3 @@
-<?php
-session_start();
-$cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
-$products = json_decode(file_get_contents("products.json"), true);
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,17 +18,12 @@ $products = json_decode(file_get_contents("products.json"), true);
   <div class="sidebar-content">
 
     <div class="sidebar-profile">
-      <?php if (isset($_SESSION['email'])): ?>
         <div class="sidebar-user-status">
-          <strong><?= htmlspecialchars($_SESSION['fullname'] ?? $_SESSION['email'])?></strong>
-          <small><?= htmlspecialchars($_SESSION['email'])?></small>
         </div>
-      <?php else: ?>
         <div class="sidebar-user-status">
           <strong>Guest</strong>
           <small>Not Logged In</small>
         </div>
-      <?php endif; ?>
     </div>
 
     <hr>
@@ -41,7 +31,7 @@ $products = json_decode(file_get_contents("products.json"), true);
     <nav class="sidebar-nav">
       <a href="index.php" class="sidebar-link">Home</a>
       <a href="orders.php" class="sidebar-link">Orders</a>
-      <a href="cart.php" class="sidebar-link">CART</a>
+      <a href="cart.php" class="sidebar-link">Cart</a>
     </nav>
     
     <div class="cart-panel" id="cartPanel" style="display:none;">
@@ -50,11 +40,8 @@ $products = json_decode(file_get_contents("products.json"), true);
       <p>Total: ₱<span id="total">0</span></p>
     </div>
 
-    <?php if (isset($_SESSION['email'])): ?>
-          <a href="logout.php" class="sidebar-link logout-btn">Logout</a>
-        <?php else: ?>
-          <a href="login.php" class="sidebar-link login-btn">Login / Sign Up</a>
-        <?php endif; ?>
+    <button id="logoutBtn" class="sidebar-link logout-btn">Logout</button>
+    <a href="login.html" class="sidebar-link login-btn">Login / Sign Up</a>
 
   </div>
 </aside>
@@ -72,7 +59,8 @@ $products = json_decode(file_get_contents("products.json"), true);
     </select>
   </section>
 
-  <div class="products" id="products-container"></div>
+  <div id="products-container"></div>
+  
 </main>
 
 <div id="productModal" class="modal">

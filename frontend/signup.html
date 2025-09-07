@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+    <div class="signup-container">
+        <h2>Create an Account</h2>
+        <p id="signupError" class="error"></p>
+        
+        <form id="signupForm">
+            <input type="text" name="first_name" placeholder="First Name" required>
+            <input type="text" name="last_name" placeholder="Last Name" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <input type="number" name="phone_number" placeholder="Phone Number" required>
+            <input type="text" name="address" placeholder="Address" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+            
+            <!-- hidden for cart checkout -->
+            <input type="hidden" name="product_id" value="<?= $product_id ?>">
+            <input type="hidden" name="quantity" value="<?= $quantity ?>">
+
+            <button type="submit">Sign Up</button>
+        </form>
+
+        <a href="login.html" class="login-link">
+            Already have an account? Log In
+        </a>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
