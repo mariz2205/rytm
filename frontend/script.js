@@ -1,6 +1,37 @@
+
+//session
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("../backend/session.php", {
+    method: "GET",
+    credentials: "include"
+  })
+    .then(res => res.json())
+
+    .then(data => {
+      if (data.loggedIn) {
+        document.getElementById("sidebarName").textContent = data.fullname;
+        document.getElementById("sidebarEmail").textContent = data.email;
+
+        document.getElementById("logoutBtn").style.display = "block";
+        document.getElementById("loginLink").style.display = "none";
+      } else {
+        document.getElementById("sidebarName").textContent = "Guest";
+        document.getElementById("sidebarEmail").textContent = "Not Logged In";
+
+        document.getElementById("logoutBtn").style.display = "none";
+        document.getElementById("loginLink").style.display = "block";
+      }
+    })
+    .catch(err => console.error("Session check error:", err));
+});
+
+
+
 // When the page loads, fetch products
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
+
+
 
   // Filter by category
   const categorySelect = document.getElementById("category-select");
@@ -12,6 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+
+
 // Fetch PRODUCTS from backend/products.php
 function fetchProducts(category = "all") {
   fetch("http://localhost/rytm/backend/products.php?category=" + category)
@@ -22,6 +55,8 @@ function fetchProducts(category = "all") {
     })
     .catch(err => console.error("Fetch error:", err));
   }
+
+
 
 
 // Render products in the container
@@ -39,6 +74,8 @@ function displayProducts(products) {
     return;
   }
 
+
+
   //Loop products to product cards
   for (const p of products) {
     const card = document.createElement("div");
@@ -48,12 +85,36 @@ function displayProducts(products) {
       <img src="../${p.image}" alt="${p.name}">
       <h3>${p.name}</h3>
       <p>₱${Number(p.price).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</p>
-      <button>View</button>
     `;
+    const viewBtn = document.createElement("button");
+    viewBtn.textContent = "View";
+    viewBtn.className = "view-btn";
+
+    viewBtn.addEventListener("click", () => {
+        openModal(
+          `../${p.image}`,
+          p.name,
+          Number(p.price).toLocaleString("en-PH", { minimumFractionDigits: 2 }),
+          p.description || "No description available."
+        );
+      });
+
+      card.appendChild(viewBtn);
 
     container.appendChild(card);
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const closeSpan = document.querySelector(".close");
+  if (closeSpan) {
+    closeSpan.addEventListener("click", () => {
+      document.getElementById("productModal").style.display = "none";
+    });
+  }
+});
+
+
 
 
 // Open modal
@@ -63,8 +124,11 @@ function openModal(image, title, price, description) {
   document.getElementById("modalTitle").textContent = title;
   document.getElementById("modalPrice").textContent = "₱" + price;
   document.getElementById("modalDescription").textContent = description;
+  
   modal.style.display = "block";
 }
+
+
 
 // Close modal when clicked outside
 window.onclick = function (event) {
@@ -74,76 +138,25 @@ window.onclick = function (event) {
   }
 };
 
-// Handle login form via AJAX
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const formData = new FormData(loginForm);
 
-      fetch("../backend/login.php", {  // FIXED PATH
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          window.location.href = data.redirect;
-        } else {
-          document.getElementById("error").textContent = data.message;
-        }
-      })
-      .catch(err => {
-        console.error("Login error:", err);
-        document.getElementById("error").textContent = "Server error!";
-      });
-    });
-  }
-});
-
-
-//Handle signup form via AJAX
-document.addEventListener("DOMContentLoaded", () => {
-  const signupForm = document.getElementById("signupForm");
-  if (signupForm) {
-    signupForm.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const formData = new FormData(signupForm);
-
-      fetch("../backend/signup.php", {  //FIXED PATH
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          window.location.href = data.redirect; //go to index/checkout
-        } else {
-          document.getElementById("signupError").textContent = data.message;
-        }
-      })
-      .catch(err => {
-        console.error("Signup error:", err);
-        document.getElementById("signupError").textContent = "Server error!";
-      });
-    });
-  }
-});
-
-//for logout button
+//for LOGOUT button
 document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-      fetch("../backend/logout.php")
+      fetch("../backend/logout.php", {
+        method: "GET",
+        credentials: "include"
+      })
         .then(res => res.json())
+
         .then(data => {
           if (data.success) {
-            window.location.href = data.redirect; // go back to shop or login
+            window.location.href = data.redirect; //go back to shop or login
           }
         })
         .catch(err => console.error("Logout error:", err));
     });
   }
 });
+

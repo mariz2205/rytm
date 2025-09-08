@@ -1,48 +1,48 @@
 <?php
 session_start();
-include "db.php"; // brings in $conn
+include "db.php";
 
-$product_id = $_POST['product_id'] ?? null;
-$quantity   = $_POST['quantity'] ?? 1;
-
+header('Content-Type: application/json');
 $response = ["success" => false, "message" => "", "redirect" => ""];
 
+// Only handle POST requests
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $username = $_POST['username'] ?? '';
+    $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $sql = "SELECT c.CustomerID, c.Username, c.FirstName, c.LastName, c.Email, p.user_pass
-            FROM customerdetails c
-            JOIN passwords p ON c.CustomerID = p.CustomerID
-            WHERE c.Username = ? OR c.Email = ?";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "ss", $username, $username);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if ($row = mysqli_fetch_assoc($result)) {
-        if (password_verify($password, $row['user_pass'])) {
-            // Set session
-            $_SESSION["CustomerID"] = $row['CustomerID'];
-            $_SESSION["username"]   = $row['Username'];
-            $_SESSION["fullname"]   = $row['FirstName'] . " " . $row['LastName'];
-            $_SESSION["email"]      = $row['Email'];
-
-            $response["success"] = true;
-            if (!empty($product_id)) {
-                $response["redirect"] = "checkout.php?product_id=$product_id&quantity=$quantity";
-            } else {
-                $response["redirect"] = "index.html"; // redirect to main page
-            }
-        } else {
-            $response["message"] = "Invalid username or password!";
-        }
-    } else {
-        $response["message"] = "Invalid username or password!";
+    if (empty($email) || empty($password)) {
+        $response["message"] = "Email and password are required.";
+        echo json_encode($response);
+        exit;
     }
 
-    header("Content-Type: application/json");
-    echo json_encode($response);
-    exit;
+    // Check if email exists
+    $stmt = $conn->prepare("SELECT CustomerID, FirstName, LastName FROM customerdetails WHERE Email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+
+    if ($user) {
+        $stmt2 = $conn->prepare("SELECT user_pass FROM passwords WHERE CustomerID = ?");
+        $stmt2->bind_param("i", $user['CustomerID']);
+        $stmt2->execute();
+        $res2 = $stmt2->get_result();
+        $pwdRow = $res2->fetch_assoc();
+
+        if ($pwdRow && password_verify($password, $pwdRow['user_pass'])) {
+            $_SESSION["CustomerID"] = $user["CustomerID"];
+            $_SESSION["email"] = $email;
+            $_SESSION["fullname"] = $user["FirstName"] . " " . $user["LastName"];
+
+            $response["success"] = true;
+            $response["redirect"] = "../frontend/index.html";
+        } else {
+            $response["message"] = "Invalid password.";
+        }
+    } else {
+        $response["message"] = "No account found with that email.";
+    }
 }
-?>
+
+echo json_encode($response);

@@ -10,7 +10,7 @@ $products = [];
 
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $imagePath = $row['Image'] ? "img/products/" . $row['Image'] : "assets/images/default.png";
+        $imagePath = $row['Image'] ? "img/products/" . $row['Image'] : "images/products/default.png";
 
         $products[] = [
             "id" => $row["ProductID"],

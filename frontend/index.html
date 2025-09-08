@@ -18,20 +18,18 @@
   <div class="sidebar-content">
 
     <div class="sidebar-profile">
-        <div class="sidebar-user-status">
-        </div>
-        <div class="sidebar-user-status">
-          <strong>Guest</strong>
-          <small>Not Logged In</small>
-        </div>
+      <div class="sidebar-user-status">
+        <strong id="sidebarName">Guest</strong>
+        <small id="sidebarEmail">Not Logged In</small>
+      </div>
     </div>
 
     <hr>
 
     <nav class="sidebar-nav">
-      <a href="index.php" class="sidebar-link">Home</a>
-      <a href="orders.php" class="sidebar-link">Orders</a>
-      <a href="cart.php" class="sidebar-link">Cart</a>
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="orders.html" class="sidebar-link">Orders</a>
+      <a href="cart.html" class="sidebar-link">Cart</a>
     </nav>
     
     <div class="cart-panel" id="cartPanel" style="display:none;">
@@ -40,8 +38,8 @@
       <p>Total: ₱<span id="total">0</span></p>
     </div>
 
-    <button id="logoutBtn" class="sidebar-link logout-btn">Logout</button>
-    <a href="login.html" class="sidebar-link login-btn">Login / Sign Up</a>
+    <button id="logoutBtn" class="sidebar-link logout-btn" style="display:none;">Logout</button>
+    <a href="login.html" id="loginLink" class="sidebar-link login-btn">Login / Sign Up</a>
 
   </div>
 </aside>
@@ -59,18 +57,21 @@
     </select>
   </section>
 
-  <div id="products-container"></div>
+  <div class="products" id="products-container"></div>
   
 </main>
 
 <div id="productModal" class="modal">
-  <img id="modalImage" src="" alt="">
-  <h3 id="modalTitle"></h3>
-  <p id="modalPrice"></p>
-  <p id="modalDescription"></p>
-  <div>
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <img id="modalImage" src="" alt="Product Image">
+    <h2 id="modalTitle"></h2>
+    <p id="modalPrice"></p>
+    <p id="modalDescription"></p>
   </div>
-  <button class="modal-close" onclick="modal.style.display='none'">Close</button>
+
+  <button class="modal-close" onclick="document.getElementById('productModal').style.display='none'">Close</button>
+
 </div>
 
 <script src="script.js"></script>
