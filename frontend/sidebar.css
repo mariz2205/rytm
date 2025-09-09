@@ -1,16 +1,20 @@
 .sidebar {
   position: fixed;
-  left: 0;
   top: 0;
-  width: 250px;
-  height: 100vh;
-  background-color: #1a1a1a;
+  left: 0;
+  width: 220px;
+  height: 100%;
+  background: #1e1e1e;
   padding: 1rem;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
-  z-index: 5;
-  overflow-y: auto;
-  scrollbar-width: none;
+  color: #f0f0f0;
+  border-right: 1px solid #444;
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* keeps logout pinned at bottom */
 }
+
 
 .sidebar-content {
   display: flex;
@@ -37,17 +41,19 @@
 }
 
 
-.sidebar-link,
-.sidebar-button {
+.sidebar-link, 
+.sidebar-button, 
+.logout-btn {
   display: block;
-  text-decoration: none;
-  padding: 0.6rem 1rem;
-  margin: 0.3rem 0;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin: 0.4rem 0;
   font-weight: bold;
   border-radius: 8px;
   text-align: center;
   border: none;
   cursor: pointer;
+  font-size: 15px;
   transition: all 0.3s ease;
   background-color: #2a2a2a;
   color: #f0f0f0;

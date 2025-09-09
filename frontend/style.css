@@ -14,36 +14,6 @@ body {
   padding: 0;
 }
 
-/*sidebar*/
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 200px;
-  height: 100%;
-  background: #1e1e1e;
-  padding: 1rem;
-  color: #f0f0f0;
-  border-right: 1px solid #444;
-  z-index: 1000;
-}
-
-.sidebar h3 {
-  margin-top: 0;
-  color: #FFD700;
-}
-
-.sidebar-link {
-  color: #f0f0f0;
-  display: block;
-  margin: 0.5rem 0;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.sidebar-link:hover {
-  color: #C62828;
-}
 
 header {
   background-image: url(https://i.pinimg.com/736x/bb/3d/cd/bb3dcde1adbe5e6f52b4df5600bd2358.jpg);
@@ -55,7 +25,7 @@ header {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  margin-left: 250px; 
+  margin-left: 210px; 
 }
 
 #user-area {
@@ -93,6 +63,7 @@ main {
   justify-content: center;
   gap: 20px;
   padding: 20px;
+  align-items: stretch;
 }
 
 .product-card {
@@ -103,6 +74,10 @@ main {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
   max-width: 280px;
+
+  display: flex;
+  flex-direction: column; 
+  justify-content: space-between;
 }
 
 .product-card:hover {
@@ -120,16 +95,21 @@ main {
   font-size: 1.1rem;
   margin: 0.5rem 0;
   color: #FFD700;
+  flex-shrink: 0;
 }
 
 .product-card p {
   font-weight: bold;
   color: #e0bb00;
   margin-bottom: 0.5rem;
+
 }
 
 .product-card button {
-  margin-top: 10px;
+  display: block;              
+  width: 100%;                  
+  max-width: 200px;            
+  margin: 10px auto 0 auto;     
   padding: 8px 12px;
   background-color: #000000;
   color: white;
@@ -137,9 +117,8 @@ main {
   border-radius: 6px;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  position: relative;
-  z-index: 1;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  text-align: center;          
 }
 
 .product-card button:hover {
@@ -265,10 +244,3 @@ h1, h2, h3 {
   margin-bottom: 0.5rem;
 }
 
-.sidebar-link,
-button,
-a.button {
-  font-weight: 600;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
-}

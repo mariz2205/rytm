@@ -1,8 +1,9 @@
-.cart-table {
-  width: 100%;
+#cart-items {
+  width: 200%;
   max-width: 900px;
   margin: 2rem auto;
-  border-collapse: collapse;
+  padding: 0;
+  list-style: none;
   background-color: #1e1e1e;
   border-radius: 10px;
   overflow: hidden;
@@ -10,32 +11,53 @@
   box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
 
-.cart-table th, .cart-table td {
+#cart-items li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 12px;
-  text-align: center;
   border-bottom: 1px solid #444;
 }
 
-.cart-table th {
-  background-color: #111;
-  color: #FFD700;
+#cart-items li:last-child {
+  border-bottom: none;
 }
 
-.cart-table td button {
+#cart-items li button {
   background-color: #2a2a2a;
   color: #f0f0f0;
   border: 1px solid #C62828;
   padding: 5px 10px;
-  margin: 0 2px;
+  margin-left: 5px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
   transition: 0.3s ease;
 }
 
-.cart-table td button:hover {
+#cart-items li button:hover {
   background-color: #C62828;
   color: #fff;
+}
+
+#cart-items li img {
+  width: 60px;           
+  height: 60px;
+  object-fit: cover;     
+  border-radius: 6px;    
+  margin-right: 10px;
+  border: 1px solid #333;
+}
+
+#cart-items li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#cart-items li span {
+  flex: 1;
+  font-size: 14px;
 }
 
 header {
@@ -48,7 +70,7 @@ header {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  margin-left: 250px; 
+  margin-left: 210px; 
 }
 
 h3, .btn, .btn-secondary {
@@ -118,18 +140,6 @@ h3, .btn, .btn-secondary {
   left: 3px;
 }
 
-.logout-btn, .login-btn {
-  margin-top: auto;
-  background-color: #b22222;
-  text-align: center;
-}
-
-.logout-btn:hover {
-  background-color: #ff4c4c;
-  color: #fff;
-}
-
-
 @media (max-width: 768px) {
   .cart-table th, .cart-table td {
     padding: 8px;
@@ -138,4 +148,27 @@ h3, .btn, .btn-secondary {
   .cart-table td button {
     padding: 4px 8px;
   }
+}
+
+.sidebar-link, 
+.sidebar-button {
+  display: block;
+  width: 80%;
+  padding: 0.8rem 1rem;
+  margin: 0.4rem 0;
+  font-weight: bold;
+  border-radius: 8px;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+}
+
+.sidebar-link:hover,
+.sidebar-button:hover {
+  background-color: #FFD700;
+  color: #1a1a1a;
 }

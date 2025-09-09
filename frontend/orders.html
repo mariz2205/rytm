@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title>My Orders</title>
-  <link rel="stylesheet" href="style.css"> 
+  <link rel="stylesheet" href="sidebar.css"> 
   <link rel="stylesheet" href="orders.css"> 
 </head>
 <body>
-  <div class="sidebar">
-      <h3>Menu</h3>
+  <aside class="sidebar">
+    <div class="sidebar-content">
       <a href="index.html" class="sidebar-link">Home</a>
       <a href="cart.html" class="sidebar-link">Cart</a>
-  </div>
+      <button class="logout-btn">Logout</button>
+    </div>
+  </aside>
 
   <header>
-      <h1>My Orders</h1>
+    <h1>My Orders</h1>
   </header>
 
   <main id="orders-container">
-      Loading orders...
+    Loading orders...
   </main>
 
   <script src="orders.js"></script>

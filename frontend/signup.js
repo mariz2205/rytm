@@ -2,25 +2,40 @@
 
 //Handle SIGNUP form via AJAX
 const signupForm = document.getElementById("signupForm");
+const signupMsg = document.getElementById("signupMsg");
+
 if (signupForm) {
-  signupForm.addEventListener("submit", (e) => {
+  signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const formData = new FormData(signupForm);
 
-    fetch("../backend/signup.php", {
-      method: "POST",
-      body: formData,
-      credentials: "include" 
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
+    try {
+      const res = await fetch("../backend/signup.php", {
+        method: "POST",
+        body: formData,
+        credentials: "include"
+      });
+
+      // Try to parse JSON
+      const data = await res.json();
+      console.log("Signup response:", data);
+
+      if (data.success) {
+        signupMsg.style.color = "green";
+        signupMsg.textContent = "Signup successful! Redirecting...";
+        setTimeout(() => {
           window.location.href = data.redirect;
-        } else {
-          document.getElementById("signupMsg").textContent = data.message;
-        }
-      })
-      .catch(err => console.error("Signup error:", err));
+        }, 1000);
+      } else {
+        signupMsg.style.color = "red";
+        signupMsg.textContent = data.message || "Signup failed.";
+      }
+
+    } catch (err) {
+      console.error("Signup error:", err);
+      signupMsg.style.color = "red";
+      signupMsg.textContent = "Server error. Please try again later.";
+    }
   });
 }

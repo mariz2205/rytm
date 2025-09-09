@@ -67,64 +67,90 @@ function displayProducts(products) {
     return;
   }
 
-  container.replaceChildren(); 
+  container.replaceChildren();
 
   if (!Array.isArray(products) || products.length === 0) {
     container.textContent = "No products found.";
     return;
   }
 
-
-
-  //Loop products to product cards
+  // Loop products to product cards
   for (const p of products) {
     const card = document.createElement("div");
     card.className = "product-card";
 
-    card.innerHTML = `
-      <img src="../${p.image}" alt="${p.name}">
-      <h3>${p.name}</h3>
-      <p>₱${Number(p.price).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</p>
-    `;
+    // product image
+    const img = document.createElement("img");
+    img.src = `../${p.image}`;
+    img.alt = p.name;
+
+    // product name
+    const name = document.createElement("h3");
+    name.textContent = p.name;
+
+    // product price
+    const price = document.createElement("p");
+    price.textContent = `₱${Number(p.price).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
+
+    // actions (buttons container)
+    const btnGroup = document.createElement("div");
+    btnGroup.className = "product-actions";
+
+    // view button
     const viewBtn = document.createElement("button");
     viewBtn.textContent = "View";
     viewBtn.className = "view-btn";
-
     viewBtn.addEventListener("click", () => {
-        openModal(
-          `../${p.image}`,
-          p.name,
-          Number(p.price).toLocaleString("en-PH", { minimumFractionDigits: 2 }),
-          p.description || "No description available."
-        );
-      });
+      openModal(
+        `../${p.image}`,
+        p.name,
+        Number(p.price).toLocaleString("en-PH", { minimumFractionDigits: 2 }),
+        p.description || "No description available."
+      );
+    });
 
-      card.appendChild(viewBtn);
+   // add to cart button
+    const addBtn = document.createElement("button");
+    addBtn.textContent = "Add to Cart";
+    addBtn.className = "cart-btn";
+    addBtn.addEventListener("click", async () => {
+      await updateCart("add", p.id, 1);
+      window.location.href = "cart.html"; // ✅ redirect to Cart page
+    });
+
+    // buy now button
+    const buyBtn = document.createElement("button");
+    buyBtn.textContent = "Buy Now";
+    buyBtn.className = "buy-btn";
+    buyBtn.addEventListener("click", async () => {
+      await updateCart("add", p.id, 1); // add item first
+      window.location.href = "checkout.php"; // go to checkout page
+    });
+
+
+    // put buttons inside button group
+    btnGroup.appendChild(viewBtn);
+    btnGroup.appendChild(addBtn);
+    btnGroup.appendChild(buyBtn);
+
+    // assemble card
+    card.appendChild(img);
+    card.appendChild(name);
+    card.appendChild(price);
+    card.appendChild(btnGroup);
 
     container.appendChild(card);
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const closeSpan = document.querySelector(".close");
-  if (closeSpan) {
-    closeSpan.addEventListener("click", () => {
-      document.getElementById("productModal").style.display = "none";
-    });
-  }
-});
-
-
-
-
-// Open modal
+// Open modal (product info, no buttons)
 function openModal(image, title, price, description) {
   const modal = document.getElementById("productModal");
   document.getElementById("modalImage").src = image;
   document.getElementById("modalTitle").textContent = title;
   document.getElementById("modalPrice").textContent = "₱" + price;
   document.getElementById("modalDescription").textContent = description;
-  
+
   modal.style.display = "block";
 }
 

@@ -6,7 +6,9 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="cart.css">
   <link rel="stylesheet" href="sidebar.css">
-  <script src="cart.js" defer></script>
+
+  <script src="cart.js"></script>
+  <script src="script.js"></script>
 </head>
 <body>
 
@@ -15,34 +17,23 @@
 </header>
 
 <div class="sidebar">
-  <div class="sidebar-profile">
-    <img src="avatar.png" alt="User Avatar" class="sidebar-avatar">
-  </div>
 
-  <div class="sidebar-content">
-    <a href="index.html" class="sidebar-link">Home</a>
-    <a href="orders.html" class="sidebar-link">Orders</a>
-    <a href="cart.html" class="sidebar-link">Cart</a>
-
-    <div class="sidebar-actions">
-      <button class="sidebar-button logout-btn">Logout</button>
+  <aside class="sidebar">
+    <div class="sidebar-content">
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="orders.html" class="sidebar-link">Orders</a>
+      <button class="logout-btn">Logout</button>
     </div>
-  </div>
-
-  <div class="cart-panel">
-    <h3>Cart</h3>
-    <ul id="cart-items-sidebar">
-      <!--sidebar cart items will be injected here-->
-    </ul>
-  </div>
+  </aside>
 </div>
 
 <main>
-  <h1>Your Cart</h1>
-
-  <p>Your cart is empty.</p>
+  <h1>Your Cart</h1>  
+  <ul id="cart-items"></ul>
+  <p>Total: ₱<span id="cart-total">0</span></p>
   <a href="index.html" class="btn-secondary">Continue Shopping</a>
 </main>
+
 
 </body>
 </html>

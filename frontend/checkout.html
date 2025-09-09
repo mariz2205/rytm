@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout - RYTM</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="sidebar.css">
+  <link rel="stylesheet" href="checkout.css">
+  <script defer src="checkout.js"></script>
+</head>
+<body>
+<header>
+  <h1>RYTM</h1>
+</header>
+
+<div class="sidebar">
+  <div class="sidebar-content">
+    <a href="index.html" class="sidebar-link">Home</a>
+    <a href="orders.html" class="sidebar-link">Orders</a>
+    <button class="logout-btn" onclick="window.location.href='../backend/logout.php'">Logout</button>
+  </div>
+</div>
+
+<main>
+  <h1>Checkout</h1>
+
+  <section class="checkout-section">
+    <table id="checkout-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- JS will populate checkout items here -->
+      </tbody>
+    </table>
+
+    <div id="checkout-summary">
+      <p>Total: ₱<span id="checkout-total">0</span></p>
+      <button id="confirm-btn" class="btn">Confirm Order</button>
+      <a href="cart.html" class="btn-secondary">← Back to Cart</a>
+    </div>
+  </section>
+</main>
+</body>
+</html>

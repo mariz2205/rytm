@@ -1,4 +1,4 @@
-
+/* General Styles */
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #121212;
@@ -20,11 +20,12 @@ header {
   margin-left: 250px;
 }
 
+/* Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
-  width: 250px;
+  width: 220px;
   height: 100%;
   background: #1e1e1e;
   padding: 1rem;
@@ -37,53 +38,22 @@ header {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  color: #f0f0f0;
   height: 100%;
 }
 
-.sidebar-actions {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.sidebar h2, .sidebar h3, .sidebar h4 {
-  color: #FFD700;
-  font-size: 1.2rem;
-  margin-top: 0;
-  border-bottom: 1px solid #333;
-  padding-bottom: 0.3rem;
-}
-
-.sidebar-profile {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-
-.sidebar-user-status {
-  font-size: 0.9rem;
-  color: #ddd;
-}
-
-.sidebar-user-status strong {
+.sidebar-link, 
+.sidebar-button, 
+.logout-btn {
   display: block;
-  color: #FFD700;
-  font-size: 1rem;
-}
-
-.sidebar-link,
-.sidebar-button {
-  display: block;
-  text-decoration: none;
-  padding: 0.6rem 1rem;
-  margin: 0.3rem 0;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin: 0.4rem 0;
   font-weight: bold;
   border-radius: 8px;
   text-align: center;
   border: none;
   cursor: pointer;
+  font-size: 15px;
   transition: all 0.3s ease;
   background-color: #2a2a2a;
   color: #f0f0f0;
@@ -95,10 +65,9 @@ header {
   color: #1a1a1a;
 }
 
-.logout-btn, .login-btn {
+.logout-btn {
   margin-top: auto;
   background-color: #b22222;
-  text-align: center;
 }
 
 .logout-btn:hover {
@@ -106,63 +75,51 @@ header {
   color: #fff;
 }
 
-.cart-panel {
-  background-color: #222;
-  border: 1px solid #333;
-  padding: 1rem;
-  border-radius: 10px;
-  margin-top: 0.5rem;
-}
-
-.cart-panel h3 {
-  color: #FFD700;
-  margin-bottom: 0.5rem;
-}
-
-.cart-panel ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.cart-panel li {
-  margin: 0.3rem 0;
-  font-size: 0.9rem;
-  display: flex;
-  justify-content: space-between;
-}
-
+/* Main Content */
 main {
   margin-left: 250px;
   padding: 2rem;
   min-height: 100vh;
 }
 
-.cart-table, .checkout-section table {
+/* Checkout Section */
+.checkout-section {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Checkout Table */
+.checkout-section table {
   width: 100%;
-  max-width: 900px;
-  margin: 1rem auto;
   border-collapse: collapse;
   background-color: #1e1e1e;
   border-radius: 10px;
   overflow: hidden;
-  color: #f0f0f0;
   box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  margin-bottom: 2rem;
 }
 
-.cart-table th, .cart-table td,
-.checkout-section table th, .checkout-section table td {
+.checkout-section th, .checkout-section td {
   padding: 12px;
   text-align: center;
   border-bottom: 1px solid #444;
 }
 
-.cart-table th, .checkout-section table th {
+.checkout-section th {
   background-color: #111;
   color: #FFD700;
 }
 
-.cart-table td button, .checkout-section table td button {
+.checkout-section td img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Buttons in Table */
+.checkout-section td button {
   background-color: #2a2a2a;
   color: #f0f0f0;
   border: 1px solid #C62828;
@@ -171,15 +128,15 @@ main {
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  transition: 0.3s ease;
+  transition: 0.3s;
 }
 
-.cart-table td button:hover,
-.checkout-section table td button:hover {
+.checkout-section td button:hover {
   background-color: #C62828;
   color: #fff;
 }
 
+/* Inputs */
 .checkout-section input[type="number"] {
   width: 50px;
   text-align: center;
@@ -195,115 +152,92 @@ main {
   cursor: pointer;
 }
 
-.btn, .checkout-section button[type="submit"], .checkout-section button[type="button"] {
-  background-color: #C62828;
-  color: #f0f0f0;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  margin: 1rem auto;
-  display: block;
-  transition: 0.3s;
-}
-
-.btn:hover,
-.checkout-section button[type="submit"]:hover,
-.checkout-section button[type="button"]:hover {
-  background-color: #FFD700;
-  color: #121212;
-}
-
-.btn-secondary {
-  background-color: #2a2a2a;
-  color: #f0f0f0;
-  border: 1px solid #C62828;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-  display: block;
-  text-align: center;
-  transition: 0.3s;
-}
-
-.btn-secondary:hover {
-  background-color: #C62828;
-  color: #fff;
-}
-
+/* Checkout Summary */
 #checkout-summary {
   text-align: center;
-  margin-bottom: 2rem;
   background-color: #111;
-  padding: 15px;
+  padding: 20px;
   border-radius: 10px;
   box-shadow: 0 3px 10px rgba(255,215,0,0.1);
 }
 
 #checkout-summary p {
-  margin: 8px 0;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+#checkout-summary button, #checkout-summary a.btn-secondary {
+  margin: 5px;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  border: none;
+  transition: 0.3s;
 }
 
 #checkout-summary button {
-  margin: 0 5px;
-  background-color: #2a2a2a;
-  border: 1px solid #FFD700;
+  background-color: #C62828;
   color: #f0f0f0;
-  padding: 5px 10px;
-  border-radius: 6px;
+  border: none;
 }
 
 #checkout-summary button:hover {
   background-color: #FFD700;
-  color: #1a1a1a;
+  color: #121212;
 }
 
+#checkout-summary a.btn-secondary {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  border: 1px solid #C62828;
+}
+
+#checkout-summary a.btn-secondary:hover {
+  background-color: #C62828;
+  color: #fff;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   header, main {
     margin-left: 0;
     padding: 1rem;
   }
-  .checkout-section, .cart-table {
-    padding: 1rem;
-  }
-  .cart-table th, .cart-table td,
+
   .checkout-section table th, .checkout-section table td {
     padding: 8px;
-  }
-  #checkout-summary button {
-    margin: 5px 0;
   }
 }
 
 @media (max-width: 480px) {
-  .checkout-section table,
-  .checkout-section table tr,
-  .checkout-section table td,
-  .checkout-section table th,
-  .cart-table,
-  .cart-table tr,
-  .cart-table td,
-  .cart-table th {
+  .checkout-section table, .checkout-section table tr, .checkout-section table td, .checkout-section table th {
     display: block;
     width: 100%;
   }
-  .checkout-section table tr, .cart-table tr {
+
+  .checkout-section table tr {
     margin-bottom: 10px;
   }
-  .checkout-section table td, .cart-table td {
+
+  .checkout-section table td {
     text-align: right;
     padding-left: 50%;
     position: relative;
   }
-  .checkout-section table td::before, .cart-table td::before {
+
+  .checkout-section table td::before {
     content: attr(data-label);
     position: absolute;
     left: 10px;
-    text-align: left;
     font-weight: bold;
     color: #FFD700;
+    text-align: left;
+  }
+
+  #checkout-summary button, #checkout-summary a.btn-secondary {
+    width: 100%;
   }
 }

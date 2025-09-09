@@ -38,34 +38,38 @@ switch ($action) {
 }
 
 // Build response
-$response = [];
+$response['items'] = [];
 $total = 0;
 
 // fetch product info from DB
 if (!empty($cart)) {
     $ids = implode(",", array_keys($cart));
-    $sql = "SELECT ProductID, ProductName, ProductPrice FROM productdetails WHERE ProductID IN ($ids)";
-    $result = mysqli_query($conn, $sql);
+    $sql = "SELECT ProductID, ProductName, ProductPrice, Image 
+        FROM productdetails 
+        WHERE ProductID IN ($ids)";
+$result = mysqli_query($conn, $sql);
 
-    $products = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $products[$row['ProductID']] = $row;
-    }
+$products = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $products[$row['ProductID']] = $row;
+}
 
-    foreach ($cart as $pid => $cqty) {
-        if (!isset($products[$pid])) continue;
-        $prod = $products[$pid];
-        $subtotal = $prod['ProductPrice'] * $cqty;
-        $total += $subtotal;
+foreach ($cart as $pid => $cqty) {
+    if (!isset($products[$pid])) continue;
+    $prod = $products[$pid];
+    $subtotal = $prod['ProductPrice'] * $cqty;
+    $total += $subtotal;
 
-        $response['items'][] = [
-            "id" => $pid,
-            "name" => $prod['ProductName'],
-            "price" => $prod['ProductPrice'],
-            "qty" => $cqty,
-            "subtotal" => $subtotal
-        ];
-    }
+    $response['items'][] = [
+        "id" => $pid,
+        "name" => $prod['ProductName'],
+        "price" => $prod['ProductPrice'],
+        "qty" => $cqty,
+        "subtotal" => $subtotal,
+        "image" => $prod['Image']
+    ];
+}
+
 }
 
 $response['total'] = $total;
