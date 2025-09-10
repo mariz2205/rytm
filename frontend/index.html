@@ -74,6 +74,29 @@
 
 </div>
 
+<!-- BUY NOW MODAL -->
+<div id="buyNowModal" class="modal">
+  <div class="modal-content">
+    <img id="buyNowImage" src="" alt="Product Image">
+    <h2 id="buyNowTitle"></h2>
+    <p id="buyNowPrice"></p>
+    <p id="buyNowDescription"></p>
+
+    <!-- Quantity Selector -->
+    <div class="quantity-control">
+      <button id="qtyMinus">-</button>
+      <input type="number" id="buyNowQty" value="1" min="1">
+      <button id="qtyPlus">+</button>
+    </div>
+
+    <div class="modal-buttons">
+      <button id="buyNowProceed">Proceed to Order</button>
+      <button id="buyNowCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
 <script src="cart.js"></script>
 <script src="script.js"></script>
 </body>

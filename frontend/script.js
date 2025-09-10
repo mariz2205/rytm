@@ -122,9 +122,16 @@
       const buyBtn = document.createElement("button");
       buyBtn.textContent = "Buy Now";
       buyBtn.className = "buy-btn";
-      buyBtn.addEventListener("click", async () => {
-        await updateCart("add", p.id, 1); // add item first
-        window.location.href = "checkout.php"; // go to checkout page
+
+      // Open Buy Now modal instead of redirecting immediately
+      buyBtn.addEventListener("click", () => {
+        openBuyNowModal({
+          id: p.id,
+          name: p.name,
+          price: Number(p.price).toLocaleString("en-PH", { minimumFractionDigits: 2 }),
+          description: p.description || "No description available.",
+          image: p.image
+        });
       });
 
 
@@ -154,8 +161,6 @@
     modal.style.display = "block";
   }
 
-
-
   // Close modal when clicked outside
   window.onclick = function (event) {
     const modal = document.getElementById("productModal");
@@ -163,6 +168,48 @@
       modal.style.display = "none";
     }
   };
+
+
+  function openBuyNowModal(product) {
+  const modal = document.getElementById("buyNowModal");
+  const qtyInput = document.getElementById("buyNowQty");
+
+  document.getElementById("buyNowImage").src = `../${product.image}`;
+  document.getElementById("buyNowTitle").textContent = product.name;
+  document.getElementById("buyNowPrice").textContent = "₱" + Number(product.price).toFixed(2);
+  document.getElementById("buyNowDescription").textContent = product.description || "No description available.";
+  qtyInput.value = 1; // default quantity
+
+  modal.style.display = "block";
+
+  // Quantity buttons
+  document.getElementById("qtyPlus").onclick = () => {
+    qtyInput.value = Number(qtyInput.value) + 1;
+  };
+  document.getElementById("qtyMinus").onclick = () => {
+    if (Number(qtyInput.value) > 1) qtyInput.value = Number(qtyInput.value) - 1;
+  };
+
+  // Cancel button closes modal
+  document.getElementById("buyNowCancel").onclick = () => {
+    modal.style.display = "none";
+  };
+
+  // Proceed to Order button → redirect to checkout with buy_now
+  document.getElementById("buyNowProceed").onclick = () => {
+    const qty = qtyInput.value || 1;
+    modal.style.display = "none";
+    window.location.href = `../backend/checkout.php?buy_now=${product.id}&qty=${qty}`;
+  };
+
+  // Click outside modal closes it
+  window.onclick = function(event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+}
+
 
 
   //for LOGOUT button

@@ -14,63 +14,110 @@ async function updateCart(action, id = 0, qty = 1) {
 }
 
 function renderCart(data) {
-  const selectedState = {};
-  document.querySelectorAll("#cart-items .checkout-item").forEach(cb => {
-    selectedState[cb.dataset.id] = cb.checked;
-  });
-
   const cartList = document.getElementById("cart-items");
   if (!cartList) return;
+
+  // Save previously checked items
+  const prevSelected = JSON.parse(sessionStorage.getItem("cartSelected") || "{}");
 
   cartList.innerHTML = "";
 
   if (!data.items || data.items.length === 0) {
     cartList.innerHTML = "<li>Your cart is empty.</li>";
+    document.getElementById("cart-total").textContent = "₱0.00";
     return;
   }
 
   data.items.forEach(item => {
     const li = document.createElement("li");
-    li.innerHTML = `
-      <input type="checkbox" class="checkout-item" data-id="${item.id}" 
-        ${selectedState[item.id] !== undefined ? (selectedState[item.id] ? "checked" : "") : "checked"}>
-      <img src="../img/products/${item.image}" alt="${item.name}" class="cart-img">
-      <span>${item.name} - ₱${item.price} × ${item.qty} = ₱${item.subtotal}</span>
-      <button onclick="updateCart('update', ${item.id}, ${item.qty - 1})">-</button>
-      <button onclick="updateCart('update', ${item.id}, ${item.qty + 1})">+</button>
-      <button onclick="updateCart('remove', ${item.id})">Remove</button>
-    `;
+    li.className = "cart-item";
+
+    // Checkbox
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "checkout-item";
+    checkbox.dataset.id = item.id;
+    checkbox.checked = prevSelected[item.id] !== undefined ? prevSelected[item.id] : true;
+    checkbox.addEventListener("change", updateCartTotal);
+
+    // Image
+    const img = document.createElement("img");
+    img.src = `../img/products/${item.image}`;
+    img.alt = item.name;
+    img.className = "cart-img";
+
+    // Description & subtotal
+    const span = document.createElement("span");
+    span.textContent = `${item.name} - ₱${item.price} × ${item.qty} = ₱${item.subtotal}`;
+
+    // Quantity buttons
+    const minusBtn = document.createElement("button");
+    minusBtn.textContent = "-";
+    minusBtn.addEventListener("click", () => {
+      if (item.qty > 1) updateCart("update", item.id, item.qty - 1);
+    });
+
+    const plusBtn = document.createElement("button");
+    plusBtn.textContent = "+";
+    plusBtn.addEventListener("click", () => {
+      updateCart("update", item.id, item.qty + 1);
+    });
+
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remove";
+    removeBtn.addEventListener("click", () => updateCart("remove", item.id));
+
+    li.appendChild(checkbox);
+    li.appendChild(img);
+    li.appendChild(span);
+    li.appendChild(minusBtn);
+    li.appendChild(plusBtn);
+    li.appendChild(removeBtn);
+
     cartList.appendChild(li);
   });
 
-  // Proceed to Checkout button
-  const checkoutBtn = document.createElement("button");
-  checkoutBtn.textContent = "Proceed to Checkout";
-  checkoutBtn.className = "btn";
-  checkoutBtn.onclick = () => {
-    const selected = {};
-    document.querySelectorAll("#cart-items .checkout-item:checked").forEach(cb => {
-      selected[cb.dataset.id] = 1;
+  // Save checkbox state to sessionStorage
+  document.querySelectorAll("#cart-items .checkout-item").forEach(cb => {
+    cb.addEventListener("change", () => {
+      const selected = {};
+      document.querySelectorAll("#cart-items .checkout-item").forEach(c => {
+        selected[c.dataset.id] = c.checked;
+      });
+      sessionStorage.setItem("cartSelected", JSON.stringify(selected));
+      updateCartTotal();
+    });
+  });
+
+  // Proceed to Checkout button (placed after <ul>)
+  let checkoutBtn = document.getElementById("checkoutBtn");
+  if (!checkoutBtn) {
+    checkoutBtn = document.createElement("button");
+    checkoutBtn.id = "checkoutBtn";
+    checkoutBtn.className = "btn";
+    checkoutBtn.textContent = "Proceed to Checkout";
+    checkoutBtn.addEventListener("click", () => {
+      const selected = {};
+      document.querySelectorAll("#cart-items .checkout-item:checked").forEach(cb => {
+        selected[cb.dataset.id] = 1;
+      });
+
+      if (!Object.keys(selected).length) {
+        alert("Please select at least one product to checkout.");
+        return;
+      }
+
+      sessionStorage.setItem("checkoutSelected", JSON.stringify(selected));
+      window.location.href = "checkout.html";
     });
 
-    if (!Object.keys(selected).length) {
-      alert("Please select at least one product to checkout.");
-      return;
-    }
+    cartList.parentElement.appendChild(checkoutBtn);
+  }
 
-    // Save selected items to sessionStorage
-    sessionStorage.setItem("checkoutSelected", JSON.stringify(selected));
-
-    // Redirect to checkout.html
-    window.location.href = "checkout.html";
-  };
-
-  cartList.appendChild(checkoutBtn);
-
-  // Update total based only on checked items
   updateCartTotal();
 }
 
+// Total calculation
 function updateCartTotal() {
   const totalEl = document.getElementById("cart-total");
   if (!totalEl) return;
@@ -78,12 +125,13 @@ function updateCartTotal() {
   let grand = 0;
   document.querySelectorAll("#cart-items .checkout-item:checked").forEach(cb => {
     const span = cb.parentElement.querySelector("span");
-    const match = span.textContent.match(/₱([\d.]+)/);
-    if (match) grand += parseFloat(match[1]);
+    const match = span.textContent.match(/= ₱([\d.,]+)/);
+    if (match) grand += parseFloat(match[1].replace(/,/g, ""));
   });
 
   totalEl.textContent = "₱" + grand.toFixed(2);
 }
+
 
 // Initial load
 updateCart("none");
