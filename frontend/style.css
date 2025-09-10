@@ -160,7 +160,7 @@ main {
   transform: translate(-50%, -50%);
   background: #1e1e1e;
   border-radius: 15px;
-  padding: 1.5rem;
+  padding: 2rem;
   width: 90%;
   max-width: 400px;
   display: none;
@@ -186,9 +186,13 @@ main {
 }
 
 .modal p {
-  margin: 0.3rem 0;
+  margin: 0.5rem 0;
   font-size: 1rem;
-  color: #ccc;
+  line-height: 1.6;
+  color: #e0e0e0;              
+  font-weight: 300;             
+  letter-spacing: 0.3px;     
+  text-shadow: 0 0 5px rgba(0,0,0,0.4); 
 }
 
 .modal-close {
@@ -198,8 +202,10 @@ main {
   margin-top: 1rem;
   border: 1px solid #bfa76f;
   border-radius: 8px;
+  padding: 10px 20px;
+  margin-top: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .modal-close:hover {
@@ -207,6 +213,88 @@ main {
   color: white;
   border-color: #C62828;
 }
+/* ================= BUY NOW MODAL ================= */
+#buyNowModal .modal-content {
+  text-align: center;
+  display: block;
+  padding: 2rem;
+}
+
+#buyNowModal img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border: 4px solid #C62828;
+}
+
+#buyNowModal .price {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: #FFD700;
+  font-weight: 500;
+}
+
+#buyNowModal .total {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  font-weight: bold;
+  color: #e0bb00;
+}
+
+#buyNowModal .quantity-control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 1rem 0;
+}
+
+#buyNowModal .quantity-control button {
+  background: #111;
+  color: white;
+  border: 1px solid #bfa76f;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#buyNowModal .quantity-control button:hover {
+  background: #C62828;
+  border-color: #C62828;
+}
+
+#buyNowModal .quantity-control input {
+  width: 60px;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  border: 1px solid #bfa76f;
+  background: #1e1e1e;
+  color: #f0f0f0;
+  font-size: 1rem;
+}
+
+#buyNowModal .confirm-btn {
+  background: #000;
+  color: #fff;
+  border: 1px solid #bfa76f;
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#buyNowModal .confirm-btn:hover {
+  background: #C62828;
+  border-color: #C62828;
+  transform: scale(1.05);
+}
+
 
 @media (max-width: 768px) {
   .sidebar {
