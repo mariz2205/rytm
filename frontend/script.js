@@ -27,7 +27,7 @@
 
 
 
-  // When the page loads, fetch products
+  //fetch products
   document.addEventListener("DOMContentLoaded", () => {
     fetchProducts();
 
@@ -57,8 +57,6 @@
     }
 
 
-
-
   // Render products in the container
   function displayProducts(products) {
     const container = document.getElementById("products-container");
@@ -79,24 +77,19 @@
       const card = document.createElement("div");
       card.className = "product-card";
 
-      // product image
       const img = document.createElement("img");
       img.src = `../${p.image}`;
       img.alt = p.name;
 
-      // product name
       const name = document.createElement("h3");
       name.textContent = p.name;
 
-      // product price
       const price = document.createElement("p");
       price.textContent = `₱${Number(p.price).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
 
-      // actions (buttons container)
       const btnGroup = document.createElement("div");
       btnGroup.className = "product-actions";
 
-      // view button
       const viewBtn = document.createElement("button");
       viewBtn.textContent = "View";
       viewBtn.className = "view-btn";
@@ -115,7 +108,7 @@
       addBtn.className = "cart-btn";
       addBtn.addEventListener("click", async () => {
         await updateCart("add", p.id, 1);
-        window.location.href = "cart.html"; // ✅ redirect to Cart page
+        window.location.href = "cart.html"; 
       });
 
       // buy now button
@@ -123,7 +116,7 @@
       buyBtn.textContent = "Buy Now";
       buyBtn.className = "buy-btn";
 
-      // Open Buy Now modal instead of redirecting immediately
+      // Open Buy Now modal instead of redirecting immediately  
       buyBtn.addEventListener("click", () => {
         openBuyNowModal({
           id: p.id,

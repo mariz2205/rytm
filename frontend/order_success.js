@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        const res = await fetch(`../backend/get_order.php?id=${orderId}`);
+        const res = await fetch(`../backend/order_success.php?id=${orderId}`);
         const data = await res.json();
 
         if (data.error) {

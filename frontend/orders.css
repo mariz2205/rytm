@@ -80,7 +80,6 @@ main {
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* keeps logout pinned at bottom */
 }
 
 .sidebar-link, 

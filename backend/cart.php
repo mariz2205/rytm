@@ -4,7 +4,6 @@ include "db.php"; // gives $conn
 
 header("Content-Type: application/json");
 
-// Ensure cart session exists
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
@@ -14,7 +13,7 @@ $action = $_POST['action'] ?? $_GET['action'] ?? '';
 $id     = (int)($_POST['id'] ?? $_GET['id'] ?? 0);
 $qty    = max(1, (int)($_POST['qty'] ?? 1));
 
-// Actions
+//actions
 switch ($action) {
     case "add":
         if ($id) {
@@ -37,11 +36,11 @@ switch ($action) {
         break;
 }
 
-// Build response
+//build response
 $response['items'] = [];
 $total = 0;
 
-// fetch product info from DB
+// fetch product info from da DB
 if (!empty($cart)) {
     $ids = implode(",", array_keys($cart));
     $sql = "SELECT ProductID, ProductName, ProductPrice, Image 

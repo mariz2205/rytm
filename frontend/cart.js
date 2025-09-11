@@ -17,7 +17,7 @@ function renderCart(data) {
   const cartList = document.getElementById("cart-items");
   if (!cartList) return;
 
-  // Save previously checked items
+  //save previously checked items
   const prevSelected = JSON.parse(sessionStorage.getItem("cartSelected") || "{}");
 
   cartList.innerHTML = "";

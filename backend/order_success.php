@@ -7,7 +7,7 @@ if (!$orderId) {
     die(json_encode(["error" => "Order ID missing"]));
 }
 
-// Fetch all items for this order
+//fetch all items for this order
 $stmt = $conn->prepare("SELECT ProductID, OrderQuantity, ProductPrice, OrderDate FROM orderlist WHERE OrderID=?");
 $stmt->bind_param("s", $orderId);
 $stmt->execute();
@@ -18,11 +18,11 @@ if (!$orderItems) {
     die(json_encode(["error" => "Order not found in database"]));
 }
 
-// Calculate total
+//calculate total
 $totalAmount = 0;
 foreach ($orderItems as $item) {
     $totalAmount += $item['OrderQuantity'] * $item['ProductPrice'];
 }
 
-// Send data to frontend
+//send data to frontend
 ?>

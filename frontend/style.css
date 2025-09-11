@@ -213,7 +213,7 @@ main {
   color: white;
   border-color: #C62828;
 }
-/* ================= BUY NOW MODAL ================= */
+/*buy now */
 #buyNowModal .modal-content {
   text-align: center;
   display: block;
@@ -278,7 +278,6 @@ main {
   font-size: 1rem;
 }
 
-/* Buy Now Modal Buttons */
 #buyNowModal .modal-buttons {
   display: flex;
   justify-content: center;
@@ -297,7 +296,7 @@ main {
   min-width: 120px;
 }
 
-/* Proceed to Order Button */
+/*proceed to order btn */
 #buyNowProceed {
   background-color: #C62828;
   color: #f0f0f0;

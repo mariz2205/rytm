@@ -15,7 +15,7 @@ $selected = $_POST['selected'] ?? [];
 $checkoutItems = [];
 $total = 0;
 
-//buy now!
+//buy now
 if (isset($_GET['buy_now'])) {
     $pid = intval($_GET['buy_now']);
     $qty = isset($_GET['qty']) ? intval($_GET['qty']) : 1;
@@ -42,7 +42,7 @@ if (isset($_GET['buy_now'])) {
 }
 
 
-#add to cart
+#addtocart
 else if (isset($_SESSION['cart'])) {
     $cart = $_SESSION['cart'];
     $selected = $_POST['selected'] ?? [];
