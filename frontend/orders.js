@@ -1,5 +1,3 @@
-
-
 // Fetch ORDERS
 function fetchOrders() {
   fetch("../backend/orders.php", { credentials: "include" })
@@ -18,17 +16,36 @@ function fetchOrders() {
         return;
       }
 
-      // Loop through orders
+      // Loop through each order
       data.orders.forEach(order => {
         const card = document.createElement("div");
         card.className = "order-card";
 
+        // Order info (from checkoutinfo)
+        let itemsHTML = "";
+        order.items.forEach(item => {
+          const imgPath = `../img/products/${item.Image}`;
+          itemsHTML += `
+            <div class="order-item">
+              <img src="${imgPath}" alt="${item.ProductName}" width="80">
+              <div>
+                <h4>${item.ProductName}</h4>
+                <p>Quantity: ${item.OrderQuantity}</p>
+                <p>Price: ₱${Number(item.ProductPrice).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</p>
+              </div>
+            </div>
+          `;
+        });
+
         card.innerHTML = `
-          <img src="../${order.Image}" alt="${order.ProductName}" width="100">
-          <h3>${order.ProductName}</h3>
-          <p>Quantity: ${order.OrderQuantity}</p>
-          <p>Price: ₱${Number(order.ProductPrice).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</p>
+          <h3>Order #${order.OrderID}</h3>
+          <p>Status: ${order.OrderStatus}</p>
           <p>Order Date: ${order.OrderDate}</p>
+          <p>Delivery Date: ${order.DeliveryDate || "N/A"}</p>
+          <p>Total: ₱${Number(order.TransactionAmount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</p>
+          <div class="order-items">
+            ${itemsHTML}
+          </div>
         `;
 
         container.appendChild(card);
@@ -36,7 +53,8 @@ function fetchOrders() {
     })
     .catch(err => {
       console.error("Orders fetch error:", err);
-      document.getElementById("orders-container").textContent = "Error loading orders.";
+      document.getElementById("orders-container").textContent =
+        "Error loading orders.";
     });
 }
 

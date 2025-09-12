@@ -21,23 +21,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         tableBody.innerHTML = "";
 
         data.items.forEach(item => {
-            const subtotal = item.OrderQuantity * item.ProductPrice;
+            const qty = parseInt(item.OrderQuantity, 10);
+            const price = parseFloat(item.ProductPrice);
+            const subtotal = qty * price;
             total += subtotal;
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${item.ProductID}</td>
                 <td>${item.ProductName}</td>
-                <td>${item.OrderQuantity}</td>
-                <td>₱${item.ProductPrice}</td>
+                <td>${qty}</td>
+                <td>₱${price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                 <td>₱${subtotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                
             `;
             tableBody.appendChild(tr);
         });
 
-        document.getElementById("total-amount").textContent = "₱" + total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
+        // Display total
+        document.getElementById("total-amount").textContent =
+            "₱" + total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
     } catch (err) {
         console.error(err);

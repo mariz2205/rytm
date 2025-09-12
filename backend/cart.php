@@ -34,6 +34,15 @@ switch ($action) {
             unset($cart[$id]);
         }
         break;
+
+    case "checkout":
+        $selected = $_POST['selected'] ?? [];
+        if (!empty($selected) && is_array($selected)) {
+            foreach ($selected as $pid => $val) {
+                unset($cart[$pid]); // remove each checked-out item from session cart
+            }
+        }
+        break;
 }
 
 //build response

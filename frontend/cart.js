@@ -17,7 +17,7 @@ function renderCart(data) {
   const cartList = document.getElementById("cart-items");
   if (!cartList) return;
 
-  //save previously checked items
+  // save previously checked items
   const prevSelected = JSON.parse(sessionStorage.getItem("cartSelected") || "{}");
 
   cartList.innerHTML = "";
@@ -89,31 +89,6 @@ function renderCart(data) {
     });
   });
 
-  // Proceed to Checkout button (placed after <ul>)
-  let checkoutBtn = document.getElementById("checkoutBtn");
-  if (!checkoutBtn) {
-    checkoutBtn = document.createElement("button");
-    checkoutBtn.id = "checkoutBtn";
-    checkoutBtn.className = "btn";
-    checkoutBtn.textContent = "Proceed to Checkout";
-    checkoutBtn.addEventListener("click", () => {
-      const selected = {};
-      document.querySelectorAll("#cart-items .checkout-item:checked").forEach(cb => {
-        selected[cb.dataset.id] = 1;
-      });
-
-      if (!Object.keys(selected).length) {
-        alert("Please select at least one product to checkout.");
-        return;
-      }
-
-      sessionStorage.setItem("checkoutSelected", JSON.stringify(selected));
-      window.location.href = "checkout.html";
-    });
-
-    cartList.parentElement.appendChild(checkoutBtn);
-  }
-
   updateCartTotal();
 }
 
@@ -132,6 +107,26 @@ function updateCartTotal() {
   totalEl.textContent = "₱" + grand.toFixed(2);
 }
 
+// Attach checkout button event once
+document.addEventListener("DOMContentLoaded", () => {
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", () => {
+      const selected = {};
+      document.querySelectorAll("#cart-items .checkout-item:checked").forEach(cb => {
+        selected[cb.dataset.id] = 1;
+      });
+
+      if (!Object.keys(selected).length) {
+        alert("Please select at least one product to checkout.");
+        return;
+      }
+
+      sessionStorage.setItem("checkoutSelected", JSON.stringify(selected));
+      window.location.href = "checkout.html";
+    });
+  }
+});
 
 // Initial load
 updateCart("none");

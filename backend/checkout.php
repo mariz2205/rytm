@@ -11,11 +11,10 @@ if (!isset($_SESSION['cart'])) {
 
 $cart = $_SESSION['cart'];
 $selected = $_POST['selected'] ?? [];
-
 $checkoutItems = [];
 $total = 0;
 
-//buy now
+// Buy now
 if (isset($_GET['buy_now'])) {
     $pid = intval($_GET['buy_now']);
     $qty = isset($_GET['qty']) ? intval($_GET['qty']) : 1;
@@ -41,36 +40,30 @@ if (isset($_GET['buy_now'])) {
     }
 }
 
+// Cart checkout
+else if (!empty($selected)) {
+    $ids = implode(",", array_map("intval", array_keys($selected)));
+    $sql = "SELECT ProductID, ProductName, ProductDescription, ProductPrice, Image 
+            FROM productdetails 
+            WHERE ProductID IN ($ids)";
+    $result = mysqli_query($conn, $sql);
 
-#addtocart
-else if (isset($_SESSION['cart'])) {
-    $cart = $_SESSION['cart'];
-    $selected = $_POST['selected'] ?? [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $pid = $row['ProductID'];
+        if (isset($cart[$pid])) {
+            $qty = intval($cart[$pid]);
+            $subtotal = $qty * $row['ProductPrice'];
+            $total += $subtotal;
 
-    if (!empty($selected)) {
-        $ids = implode(",", array_map("intval", array_keys($selected)));
-        $sql = "SELECT ProductID, ProductName, ProductDescription, ProductPrice, Image 
-                FROM productdetails 
-                WHERE ProductID IN ($ids)";
-        $result = mysqli_query($conn, $sql);
-
-        while ($row = mysqli_fetch_assoc($result)) {
-            $pid = $row['ProductID'];
-            if (isset($cart[$pid])) {
-                $qty = $cart[$pid];
-                $subtotal = $qty * $row['ProductPrice'];
-                $total += $subtotal;
-
-                $checkoutItems[] = [
-                    "id" => $pid,
-                    "name" => $row['ProductName'],
-                    "description" => $row['ProductDescription'],
-                    "price" => $row['ProductPrice'],
-                    "qty" => $qty,
-                    "subtotal" => $subtotal,
-                    "image" => $row['Image']
-                ];
-            }
+            $checkoutItems[] = [
+                "id" => $pid,
+                "name" => $row['ProductName'],
+                "description" => $row['ProductDescription'],
+                "price" => $row['ProductPrice'],
+                "qty" => $qty,
+                "subtotal" => $subtotal,
+                "image" => $row['Image']
+            ];
         }
     }
 }
