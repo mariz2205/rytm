@@ -11,61 +11,45 @@ if (!isset($_SESSION['CustomerID'])) {
 
 $userId = $_SESSION['CustomerID'];
 
-<<<<<<< HEAD
-$sql = "SELECT o.OrderID, o.TotalAmount, o.TotalOrderQty, o.OrderDate,
-               o.OrderStatus, o.DeliveryDate,
-               p.ProductName, p.Image,
-               oi.ProdOrdQty AS OrderQuantity,
-               oi.ProductPrice
-        FROM orderlist o
-        INNER JOIN orderitems oi ON o.OrderID = oi.OrderID
-        INNER JOIN productdetails p ON oi.ProductID = p.ProductID
-        WHERE o.CustomerID = ?";
-
-=======
-// Fetch all checkout info for this user
-$sql = "SELECT TransactionID, OrderID, TransactionAmount, AmountPurchased, 
-               OrderStatus, OrderDate, DeliveryDate
-        FROM checkoutinfo
-        WHERE CustomerID = ?
-        ORDER BY OrderDate DESC";
->>>>>>> 4cd1c6b8688da4f9996cc4e8715f2a098a045e2a
-$stmt = $conn->prepare($sql);
-
-if (!$stmt) {
-    die(json_encode(["success" => false, "message" => "SQL Error: " . $conn->error]));
-}
-
+// Fetch all orders for this user
+$stmt = $conn->prepare("
+    SELECT o.OrderID, o.TotalAmount, o.TotalOrderQty, o.OrderDate,
+           o.OrderStatus, o.DeliveryDate
+    FROM orderlist o
+    WHERE o.CustomerID = ?
+    ORDER BY o.OrderDate DESC
+");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
 
 $orders = [];
-while ($checkout = $result->fetch_assoc()) {
-    $orderId = $checkout['OrderID'];
+
+while ($order = $result->fetch_assoc()) {
+    $orderId = $order['OrderID'];
 
     // Fetch items for this order
-    $sqlItems = "SELECT o.ProductID, o.OrderQuantity, o.ProductPrice,
-                        p.ProductName, p.Image
-                 FROM orderlist o
-                 JOIN productdetails p ON o.ProductID = p.ProductID
-                 WHERE o.OrderID = ?";
-    $stmtItems = $conn->prepare($sqlItems);
+    $stmtItems = $conn->prepare("
+        SELECT oi.ProductID, oi.ProdOrdQty AS OrderQuantity, oi.ProductPrice,
+               p.ProductName, p.Image
+        FROM orderitems oi
+        JOIN productdetails p ON oi.ProductID = p.ProductID
+        WHERE oi.OrderID = ?
+    ");
     $stmtItems->bind_param("i", $orderId);
     $stmtItems->execute();
     $itemsResult = $stmtItems->get_result();
 
     $items = [];
-    while ($row = $itemsResult->fetch_assoc()) {
-        $items[] = $row;
+    while ($item = $itemsResult->fetch_assoc()) {
+        $items[] = $item;
     }
+    $stmtItems->close();
 
-    // Attach items to checkout info
-    $checkout['items'] = $items;
-
-    $orders[] = $checkout;
+    $order['items'] = $items;
+    $orders[] = $order;
 }
 
-echo json_encode(["success" => true, "orders" => $orders]);
+$stmt->close();
 
-?>
+echo json_encode(["success" => true, "orders" => $orders]);

@@ -89,7 +89,6 @@ function renderCart(data) {
     });
   });
 
-<<<<<<< HEAD
   // Proceed to Checkout button
   let checkoutBtn = document.getElementById("checkoutBtn");
   if (!checkoutBtn) {
@@ -104,21 +103,15 @@ function renderCart(data) {
   checkoutBtn.onclick = () => {
     const selected = {};
     document.querySelectorAll("#cart-items .checkout-item:checked").forEach(cb => {
-      selected[cb.dataset.id] = 1;
+        const li = cb.parentElement;
+        const qtyText = li.querySelector("span").textContent.match(/× (\d+)/);
+        const qty = qtyText ? parseInt(qtyText[1], 10) : 1;
+        selected[cb.dataset.id] = qty; // <-- store actual quantity
     });
-
-    if (!Object.keys(selected).length) {
-      alert("Please select at least one product to checkout.");
-      return;
-    }
-
     sessionStorage.setItem("checkoutSelected", JSON.stringify(selected));
     window.location.href = "checkout.html";
-  };
+};
 
-
-=======
->>>>>>> 4cd1c6b8688da4f9996cc4e8715f2a098a045e2a
   updateCartTotal();
 }
 

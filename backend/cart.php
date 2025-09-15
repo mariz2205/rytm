@@ -3,33 +3,29 @@ session_start();
 include "db.php";
 header("Content-Type: application/json");
 
-$customerId = $_SESSION['CustomerID'] ?? 0; 
+$customerId = $_SESSION['CustomerID'] ?? 0;
 if (!$customerId) {
     echo json_encode(["error" => "Not logged in"]);
     exit;
 }
 
-$action = $_POST['action'] ?? $_GET['action'] ?? '';
-$id     = (int)($_POST['id'] ?? $_GET['id'] ?? 0);
+$action = $_POST['action'] ?? '';
+$id     = (int)($_POST['id'] ?? 0);
 $qty    = max(1, (int)($_POST['qty'] ?? 1));
 
 switch ($action) {
     case "add":
         if ($id) {
-            // check if already in cart
             $check = $conn->prepare("SELECT Quantity FROM shoppingcart WHERE CustomerID=? AND ProductID=?");
             $check->bind_param("ii", $customerId, $id);
             $check->execute();
-            $result = $check->get_result();
-
-            if ($row = $result->fetch_assoc()) {
-                // update qty
+            $res = $check->get_result();
+            if ($row = $res->fetch_assoc()) {
                 $newQty = $row['Quantity'] + $qty;
                 $upd = $conn->prepare("UPDATE shoppingcart SET Quantity=? WHERE CustomerID=? AND ProductID=?");
                 $upd->bind_param("iii", $newQty, $customerId, $id);
                 $upd->execute();
             } else {
-                // insert new
                 $ins = $conn->prepare("INSERT INTO shoppingcart (ProductID, ProductName, Quantity, ProductPrice, CustomerID)
                     SELECT ProductID, ProductName, ?, ProductPrice, ? FROM productdetails WHERE ProductID=?");
                 $ins->bind_param("iii", $qty, $customerId, $id);
@@ -59,18 +55,9 @@ switch ($action) {
             $del->execute();
         }
         break;
-
-    case "checkout":
-        $selected = $_POST['selected'] ?? [];
-        if (!empty($selected) && is_array($selected)) {
-            foreach ($selected as $pid => $val) {
-                unset($cart[$pid]); // remove each checked-out item from session cart
-            }
-        }
-        break;
 }
 
-// build response
+// Return current cart items
 $response['items'] = [];
 $total = 0;
 
@@ -98,6 +85,5 @@ while ($row = $res->fetch_assoc()) {
 }
 
 $response['total'] = $total;
-
 echo json_encode($response);
 exit;

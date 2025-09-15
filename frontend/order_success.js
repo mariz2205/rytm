@@ -17,9 +17,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const tableBody = document.querySelector("#order-items tbody");
-        let total = 0;
         tableBody.innerHTML = "";
 
+        let total = 0;
         data.items.forEach(item => {
             const qty = parseInt(item.OrderQuantity, 10);
             const price = parseFloat(item.ProductPrice);
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td>${item.ProductID}</td>
+                <td><img src="../img/products/${item.Image}" alt="${item.ProductName}" width="80"></td>
                 <td>${item.ProductName}</td>
                 <td>${qty}</td>
                 <td>₱${price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
@@ -37,7 +37,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             tableBody.appendChild(tr);
         });
 
-        // Display total
+        const checkout = data.checkout;
+        document.getElementById("order-id").textContent = orderId;
+        document.getElementById("order-status").textContent = checkout.OrderStatus;
+        document.getElementById("order-date").textContent = checkout.OrderDate;
+        document.getElementById("delivery-date").textContent = checkout.DeliveryDate;
         document.getElementById("total-amount").textContent =
             "₱" + total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 

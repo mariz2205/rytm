@@ -1,111 +1,76 @@
 <?php
 session_start();
 include "db.php";
+header("Content-Type: application/json");
 
 $customerId = $_SESSION['CustomerID'] ?? 0;
 if (!$customerId) {
-    die("Not logged in");
+    echo json_encode(["error" => "Not logged in"]);
+    exit;
 }
 
-<<<<<<< HEAD
-// calculate total
-$sql = "SELECT ProductID, Quantity, ProductPrice FROM shoppingcart WHERE CustomerID=?";
+$cart = [];
+$sql = "SELECT c.ProductID, c.Quantity, c.ProductPrice, c.ProductName, p.Image, p.ProductDescription
+        FROM shoppingcart c
+        JOIN productdetails p ON c.ProductID = p.ProductID
+        WHERE c.CustomerID=?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $customerId);
 $stmt->execute();
 $res = $stmt->get_result();
-
-$totalAmount = 0;
-$totalQty = 0;
-$items = [];
-
 while ($row = $res->fetch_assoc()) {
-    $totalAmount += $row['ProductPrice'] * $row['Quantity'];
-    $totalQty += $row['Quantity'];
-    $items[] = $row;
+    $cart[$row['ProductID']] = $row;
 }
 
-// insert into orderlist
-$orderDate = date("Y-m-d");
-$status = "Pending";
-$delivery = date("Y-m-d", strtotime("+3 days"));
-
-$ins = $conn->prepare("INSERT INTO orderlist (CustomerID, TotalAmount, TotalOrderQty, OrderDate, OrderStatus, DeliveryDate)
-VALUES (?, ?, ?, ?, ?, ?)");
-$ins->bind_param("idisss", $customerId, $totalAmount, $totalQty, $orderDate, $status, $delivery);
-$ins->execute();
-$orderId = $conn->insert_id;
-
-// insert into orderitems
-foreach ($items as $it) {
-    $insItem = $conn->prepare("INSERT INTO orderitems (OrderID, ProductID, ProdOrdQty, ProductPrice) VALUES (?, ?, ?, ?)");
-    $insItem->bind_param("iiid", $orderId, $it['ProductID'], $it['Quantity'], $it['ProductPrice']);
-    $insItem->execute();
-}
-
-// clear cart
-$del = $conn->prepare("DELETE FROM shoppingcart WHERE CustomerID=?");
-$del->bind_param("i", $customerId);
-$del->execute();
-
-echo json_encode(["success" => true, "orderId" => $orderId]);
-?>
-=======
-$cart = $_SESSION['cart'];
-$selected = $_POST['selected'] ?? [];
 $checkoutItems = [];
 $total = 0;
 
 // Buy now
-if (isset($_GET['buy_now'])) {
-    $pid = intval($_GET['buy_now']);
-    $qty = isset($_GET['qty']) ? intval($_GET['qty']) : 1;
+$buyNowId = $_POST['buy_now'] ?? 0;
+$buyNowQty = $_POST['qty'] ?? 1;
 
-    $sql = "SELECT ProductID, ProductName, ProductDescription, ProductPrice, Image 
-            FROM productdetails 
-            WHERE ProductID = $pid LIMIT 1";
-    $result = mysqli_query($conn, $sql);
+if ($buyNowId) {
+    // Fetch product directly from productdetails
+    $stmt = $conn->prepare("SELECT ProductID, ProductName, ProductPrice, ProductDescription, Image FROM productdetails WHERE ProductID=? LIMIT 1");
+    $stmt->bind_param("i", $buyNowId);
+    $stmt->execute();
+    $item = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
 
-    if ($row = mysqli_fetch_assoc($result)) {
-        $subtotal = $qty * $row['ProductPrice'];
-        $total += $subtotal;
-
+    if ($item) {
+        $qty = intval($buyNowQty);
+        $subtotal = $item['ProductPrice'] * $qty;
         $checkoutItems[] = [
-            "id" => $pid,
-            "name" => $row['ProductName'],
-            "description" => $row['ProductDescription'],
-            "price" => $row['ProductPrice'],
+            "id" => $item['ProductID'],
+            "name" => $item['ProductName'],
+            "description" => $item['ProductDescription'],
+            "price" => $item['ProductPrice'],
             "qty" => $qty,
             "subtotal" => $subtotal,
-            "image" => $row['Image']
+            "image" => $item['Image']
         ];
+        $total += $subtotal;
     }
-}
+} 
 
 // Cart checkout
-else if (!empty($selected)) {
-    $ids = implode(",", array_map("intval", array_keys($selected)));
-    $sql = "SELECT ProductID, ProductName, ProductDescription, ProductPrice, Image 
-            FROM productdetails 
-            WHERE ProductID IN ($ids)";
-    $result = mysqli_query($conn, $sql);
-
-    while ($row = mysqli_fetch_assoc($result)) {
-        $pid = $row['ProductID'];
+else if (!empty($_POST['selected'])) {
+    foreach ($_POST['selected'] as $pid => $v) {
+        $pid = intval($pid);
         if (isset($cart[$pid])) {
-            $qty = intval($cart[$pid]);
-            $subtotal = $qty * $row['ProductPrice'];
-            $total += $subtotal;
-
+            $item = $cart[$pid];
+            $qty = $item['Quantity'];
+            $subtotal = $qty * $item['ProductPrice'];
             $checkoutItems[] = [
                 "id" => $pid,
-                "name" => $row['ProductName'],
-                "description" => $row['ProductDescription'],
-                "price" => $row['ProductPrice'],
+                "name" => $item['ProductName'],
+                "description" => $item['ProductDescription'],
+                "price" => $item['ProductPrice'],
                 "qty" => $qty,
                 "subtotal" => $subtotal,
-                "image" => $row['Image']
+                "image" => $item['Image']
             ];
+            $total += $subtotal;
         }
     }
 }
@@ -114,4 +79,4 @@ echo json_encode([
     "items" => $checkoutItems,
     "total" => $total
 ]);
->>>>>>> 4cd1c6b8688da4f9996cc4e8715f2a098a045e2a
+exit;

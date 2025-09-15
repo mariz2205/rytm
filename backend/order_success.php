@@ -10,46 +10,37 @@ if (!$orderId) {
     exit;
 }
 
-// Fetch order items with product names
+// Fetch order summary
 $stmt = $conn->prepare("
-    SELECT o.ProductID, p.ProductName, o.OrderQuantity, o.ProductPrice, o.OrderDate
-    FROM orderlist o
-    JOIN productdetails p ON o.ProductID = p.ProductID
-    WHERE o.OrderID = ?
-");
-$stmt->bind_param("i", $orderId);
-$stmt->execute();
-$result = $stmt->get_result();
-$orderItems = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
-
-if (!$orderItems) {
-    echo json_encode(["error" => "Order not found in database"]);
-    exit;
-}
-
-// Fetch checkoutinfo (transaction details)
-$stmt = $conn->prepare("
-    SELECT TransactionAmount, CustomerID, AmountPurchased, OrderStatus, OrderDate, DeliveryDate
-    FROM checkoutinfo
+    SELECT CustomerID, TotalAmount, TotalOrderQty, OrderStatus, OrderDate, DeliveryDate
+    FROM orderlist
     WHERE OrderID = ?
     LIMIT 1
 ");
 $stmt->bind_param("i", $orderId);
 $stmt->execute();
-$checkoutResult = $stmt->get_result();
-$checkoutInfo = $checkoutResult->fetch_assoc();
+$orderSummary = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
-// Calculate total (backup, but checkoutinfo already has it)
-$totalAmount = 0;
-foreach ($orderItems as $item) {
-    $totalAmount += $item['OrderQuantity'] * $item['ProductPrice'];
+if (!$orderSummary) {
+    echo json_encode(["error" => "Order not found"]);
+    exit;
 }
 
-// Return JSON
+// Fetch order items
+$stmt = $conn->prepare("
+    SELECT oi.ProductID, p.ProductName, oi.ProdOrdQty AS OrderQuantity, oi.ProductPrice, p.Image
+    FROM orderitems oi
+    JOIN productdetails p ON oi.ProductID = p.ProductID
+    WHERE oi.OrderID = ?
+");
+$stmt->bind_param("i", $orderId);
+$stmt->execute();
+$orderItems = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
 echo json_encode([
     "items" => $orderItems,
-    "checkout" => $checkoutInfo,
-    "total" => $totalAmount
+    "checkout" => $orderSummary
 ]);
+exit;

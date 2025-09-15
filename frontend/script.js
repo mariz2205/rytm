@@ -121,7 +121,7 @@
         openBuyNowModal({
           id: p.id,
           name: p.name,
-          price: Number(p.price).toLocaleString("en-PH", { minimumFractionDigits: 2 }),
+          price: Number(p.price).toFixed(2),
           description: p.description || "No description available.",
           image: p.image
         });
@@ -162,38 +162,36 @@
     }
   };
 
-
   function openBuyNowModal(product) {
-  const modal = document.getElementById("buyNowModal");
-  const qtyInput = document.getElementById("buyNowQty");
+    const modal = document.getElementById("buyNowModal");
+    const qtyInput = document.getElementById("buyNowQty");
 
-  document.getElementById("buyNowImage").src = `../${product.image}`;
-  document.getElementById("buyNowTitle").textContent = product.name;
-  document.getElementById("buyNowPrice").textContent = "₱" + Number(product.price).toFixed(2);
-  document.getElementById("buyNowDescription").textContent = product.description || "No description available.";
-  qtyInput.value = 1; // default quantity
+    document.getElementById("buyNowImage").src = `../${product.image}`;
+    document.getElementById("buyNowTitle").textContent = product.name;
+    document.getElementById("buyNowPrice").textContent = "₱" + product.price;
+    document.getElementById("buyNowDescription").textContent = product.description;
+    qtyInput.value = 1;
 
-  modal.style.display = "block";
+    modal.style.display = "block";
 
-  // Quantity buttons
-  document.getElementById("qtyPlus").onclick = () => {
-    qtyInput.value = Number(qtyInput.value) + 1;
-  };
-  document.getElementById("qtyMinus").onclick = () => {
-    if (Number(qtyInput.value) > 1) qtyInput.value = Number(qtyInput.value) - 1;
-  };
+    // Quantity controls
+    document.getElementById("qtyPlus").onclick = () => qtyInput.value = parseInt(qtyInput.value) + 1;
+    document.getElementById("qtyMinus").onclick = () => {
+      if (parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+    };
 
-  // Cancel button closes modal
-  document.getElementById("buyNowCancel").onclick = () => {
-    modal.style.display = "none";
-  };
+    // Cancel button
+    document.getElementById("buyNowCancel").onclick = () => modal.style.display = "none";
 
-  // Proceed to Order button → redirect to checkout with buy_now
-  document.getElementById("buyNowProceed").onclick = () => {
-    const qty = qtyInput.value || 1;
-    modal.style.display = "none";
-    window.location.href = `../backend/checkout.php?buy_now=${product.id}&qty=${qty}`;
-  };
+    // Proceed to Checkout button
+    document.getElementById("buyNowProceed").onclick = () => {
+      const qty = parseInt(qtyInput.value) || 1;
+      modal.style.display = "none";
+
+      // Redirect to checkout with buy_now params
+      window.location.href = `checkout.html?buy_now=${product.id}&qty=${qty}`;
+    };
+  }
 
   // Click outside modal closes it
   window.onclick = function(event) {
@@ -201,8 +199,6 @@
       modal.style.display = "none";
     }
   };
-}
-
 
 
   //for LOGOUT button

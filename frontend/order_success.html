@@ -3,19 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <title>Order Success</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="sidebar.css"> 
+<link rel="stylesheet" href="orders.css"> 
+<link rel="stylesheet" href="order_success.css">
 </head>
 <body>
+  <aside class="sidebar">
+    <div class="sidebar-content">
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="orders.html" class="sidebar-link">Orders</a>
+      <a href="cart.html" class="sidebar-link">Cart</a>
+    </div>
+  </aside>
 <header>
   <h1>Order Success</h1>
 </header>
 <main>
   <p>Thank you for your purchase!</p>
-  <p>Order ID: <span id="order-id"></span></p>
+
+  <div class="order-summary">
+    <p>Order ID: <span id="order-id"></span></p>
+    <p>Status: <span id="order-status"></span></p>
+    <p>Order Date: <span id="order-date"></span></p>
+    <p>Delivery Date: <span id="delivery-date"></span></p>
+  </div>
+
   <table id="order-items">
     <thead>
       <tr>
-        <th>Product ID</th>
+        <th>Product</th>
         <th>Name</th>
         <th>Quantity</th>
         <th>Unit Price</th>
@@ -24,8 +40,10 @@
     </thead>
     <tbody></tbody>
   </table>
+
   <p>Total: <span id="total-amount">₱0</span></p>
-  <a href="index.html" class="btn">Back to Home</a>
+  <a href="index.html">Back to Home</a>
+
   <script src="order_success.js"></script>
 </main>
 </body>

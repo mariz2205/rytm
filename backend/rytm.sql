@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 15, 2025 at 04:35 AM
+-- Generation Time: Sep 15, 2025 at 05:47 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -42,7 +42,8 @@ CREATE TABLE `customerdetails` (
 --
 
 INSERT INTO `customerdetails` (`CustomerID`, `Username`, `LastName`, `FirstName`, `Email`, `CustomerAddress`, `ContactNo`) VALUES
-(4, 'floflo', 'Delfin', 'Flo', 'flodelfin@gmail.com', 'Balutan, Brgy. Santa Cruz, Angat, Bulacan', '09276517604');
+(4, 'floflo', 'Delfin', 'Flo', 'flodelfin@gmail.com', 'Balutan, Brgy. Santa Cruz, Angat, Bulacan', '09276517604'),
+(5, 'mm', 'macasa', 'mariz', 'marizmacasa@gmail.com', 'angat bulacan', '098776445');
 
 -- --------------------------------------------------------
 
@@ -68,7 +69,22 @@ INSERT INTO `orderitems` (`OrderItemID`, `OrderID`, `ProductID`, `ProdOrdQty`, `
 (3, 3, 1, 1, 3200.00),
 (4, 4, 2, 1, 3500.00),
 (5, 5, 1, 1, 3200.00),
-(6, 12, 2, 1, 3500.00);
+(6, 12, 2, 1, 3500.00),
+(7, 13, 1, 2, 3200.00),
+(8, 15, 2, 1, 3500.00),
+(9, 16, 3, 1, 2900.00),
+(10, 16, 4, 1, 5800.00),
+(11, 17, 14, 1, 100.00),
+(12, 18, 2, 1, 3500.00),
+(13, 19, 4, 2, 5800.00),
+(14, 20, 2, 1, 3500.00),
+(15, 21, 4, 2, 5800.00),
+(16, 22, 2, 1, 3500.00),
+(17, 23, 3, 2, 2900.00),
+(18, 24, 15, 1, 100.00),
+(19, 25, 4, 1, 5800.00),
+(20, 26, 13, 1, 150.00),
+(21, 27, 3, 2, 2900.00);
 
 -- --------------------------------------------------------
 
@@ -102,7 +118,22 @@ INSERT INTO `orderlist` (`OrderID`, `CustomerID`, `TotalAmount`, `TotalOrderQty`
 (9, 4, 0.00, 0, '2025-09-14', 'Pending', '2025-09-17'),
 (10, 4, 0.00, 0, '2025-09-14', 'Pending', '2025-09-17'),
 (11, 4, 0.00, 0, '2025-09-14', 'Pending', '2025-09-17'),
-(12, 4, 3500.00, 1, '2025-09-14', 'Pending', '2025-09-17');
+(12, 4, 3500.00, 1, '2025-09-14', 'Pending', '2025-09-17'),
+(13, 5, 6400.00, 2, '2025-09-15', 'Pending', '2025-09-18'),
+(14, 5, 0.00, 0, '2025-09-15', 'Pending', '2025-09-18'),
+(15, 5, 3500.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
+(16, 5, 8700.00, 2, '2025-09-15', 'Pending', '2025-09-18'),
+(17, 5, 100.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
+(18, 5, 3500.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
+(19, 5, 11600.00, 2, '2025-09-15', 'Pending', '2025-09-18'),
+(20, 5, 3500.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
+(21, 5, 11600.00, 2, '2025-09-15', 'Pending', '2025-09-18'),
+(22, 5, 3500.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
+(23, 5, 5800.00, 2, '2025-09-15', 'Pending', '2025-09-18'),
+(24, 5, 100.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
+(25, 5, 5800.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
+(26, 5, 150.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
+(27, 5, 5800.00, 2, '2025-09-15', 'Pending', '2025-09-18');
 
 -- --------------------------------------------------------
 
@@ -120,7 +151,8 @@ CREATE TABLE `passwords` (
 --
 
 INSERT INTO `passwords` (`CustomerID`, `user_pass`) VALUES
-(4, '$2y$10$mV7yCB1JaGchpL3k9I4I3eWNgtOiwrxFleAoENoxr1xl3p5la.xau');
+(4, '$2y$10$mV7yCB1JaGchpL3k9I4I3eWNgtOiwrxFleAoENoxr1xl3p5la.xau'),
+(5, '$2y$10$mTA13ZaIkKNITY3wlttW2uribGomNIEZb/j3K3lXIXUmpM0LExlZq');
 
 -- --------------------------------------------------------
 
@@ -197,6 +229,13 @@ CREATE TABLE `shoppingcart` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
+-- Dumping data for table `shoppingcart`
+--
+
+INSERT INTO `shoppingcart` (`CartID`, `CustomerID`, `ProductName`, `Quantity`, `ProductPrice`, `ProductID`) VALUES
+(19, 5, 'Fender CD-60S- Black', 1, 3500.00, 2);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -256,19 +295,19 @@ ALTER TABLE `shoppingcart`
 -- AUTO_INCREMENT for table `customerdetails`
 --
 ALTER TABLE `customerdetails`
-  MODIFY `CustomerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `CustomerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `orderitems`
 --
 ALTER TABLE `orderitems`
-  MODIFY `OrderItemID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `OrderItemID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `orderlist`
 --
 ALTER TABLE `orderlist`
-  MODIFY `OrderID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `OrderID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `productdetails`
@@ -280,7 +319,7 @@ ALTER TABLE `productdetails`
 -- AUTO_INCREMENT for table `shoppingcart`
 --
 ALTER TABLE `shoppingcart`
-  MODIFY `CartID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `CartID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Constraints for dumped tables
