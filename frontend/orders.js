@@ -1,5 +1,3 @@
-
-
 // Fetch ORDERS
 function fetchOrders() {
   fetch("../backend/orders.php", { credentials: "include" })
@@ -18,19 +16,50 @@ function fetchOrders() {
         return;
       }
 
-      // Loop through orders
+      // Group products by OrderID
+      const grouped = {};
       data.orders.forEach(order => {
+        if (!grouped[order.OrderID]) {
+          grouped[order.OrderID] = {
+            info: order, // order header details
+            items: []
+          };
+        }
+        grouped[order.OrderID].items.push(order);
+      });
+
+      // Loop through grouped orders
+      Object.values(grouped).forEach(group => {
+        const orderInfo = group.info;
+
         const card = document.createElement("div");
         card.className = "order-card";
 
-        card.innerHTML = `
-          <img src="../${order.Image}" alt="${order.ProductName}" width="100">
-          <h3>${order.ProductName}</h3>
-          <p>Quantity: ${order.OrderQuantity}</p>
-          <p>Price: ₱${Number(order.ProductPrice).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</p>
-          <p>Order Date: ${order.OrderDate}</p>
+        // Order header
+        let html = `
+          <h2>Order #${orderInfo.OrderID}</h2>
+          <p>Date: ${orderInfo.OrderDate}</p>
+          <p>Status: ${orderInfo.OrderStatus}</p>
+          <p>Delivery Date: ${orderInfo.DeliveryDate}</p>
+          <ul class="order-items">
         `;
 
+        // Order items
+        group.items.forEach(item => {
+          html += `
+            <li>
+              alt="${item.ProductName}" width="60">
+              ${item.ProductName} × ${item.OrderQuantity} = ₱${(item.ProductPrice * item.OrderQuantity).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+            </li>
+          `;
+        });
+
+        html += `</ul>
+          <p><strong>Total Qty:</strong> ${orderInfo.TotalOrderQty}</p>
+          <p><strong>Total Amount:</strong> ₱${Number(orderInfo.TotalAmount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</p>
+        `;
+
+        card.innerHTML = html;
         container.appendChild(card);
       });
     })

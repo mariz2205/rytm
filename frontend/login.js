@@ -9,7 +9,7 @@ if (loginForm) {
     fetch("../backend/login.php", {
       method: "POST",
       body: formData,
-      credentials: "include" // 🔑 important for sessions
+      credentials: "include"
     })
       .then(res => res.json())
       .then(data => {

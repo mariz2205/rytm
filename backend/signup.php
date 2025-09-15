@@ -36,10 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    //Insert into customerdetails (using AddressCode=1 for now)
-    $addressCode = 1;
-    $stmt = $conn->prepare("INSERT INTO customerdetails (Username, LastName, FirstName, AddressCode, Email, `ContactNo.`) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssiss", $username, $lastName, $firstName, $addressCode, $email, $phone);
+    $stmt = $conn->prepare("INSERT INTO customerdetails (Username, LastName, FirstName, Email, CustomerAddress, ContactNo) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssss", $username, $lastName, $firstName, $email, $address, $phone);
 
     if ($stmt->execute()) {
         $customerId = $stmt->insert_id;
@@ -50,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt2->bind_param("is", $customerId, $hashed_password);
         $stmt2->execute();
 
+        $_SESSION["CustomerID"] = $customerId;
         $_SESSION["email"] = $email;
         $_SESSION["fullname"] = $firstName . " " . $lastName;
 

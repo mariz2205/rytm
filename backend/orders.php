@@ -11,14 +11,22 @@ if (!isset($_SESSION['CustomerID'])) {
 
 $userId = $_SESSION['CustomerID'];
 
-$sql = "SELECT o.OrderID, o.ProductID, o.OrderQuantity, o.ProductPrice, o.OrderDate,
-               p.ProductName, p.Image
+$sql = "SELECT o.OrderID, o.TotalAmount, o.TotalOrderQty, o.OrderDate,
+               o.OrderStatus, o.DeliveryDate,
+               p.ProductName, p.Image,
+               oi.ProdOrdQty AS OrderQuantity,
+               oi.ProductPrice
         FROM orderlist o
-        JOIN productdetails p ON o.ProductID = p.ProductID
-        JOIN checkoutinfo c ON o.OrderID = c.OrderID
-        WHERE c.CustomerID = ?";
+        INNER JOIN orderitems oi ON o.OrderID = oi.OrderID
+        INNER JOIN productdetails p ON oi.ProductID = p.ProductID
+        WHERE o.CustomerID = ?";
 
 $stmt = $conn->prepare($sql);
+
+if (!$stmt) {
+    die(json_encode(["success" => false, "message" => "SQL Error: " . $conn->error]));
+}
+
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -29,3 +37,5 @@ while ($row = $result->fetch_assoc()) {
 }
 
 echo json_encode(["success" => true, "orders" => $orders]);
+
+?>

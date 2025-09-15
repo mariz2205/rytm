@@ -1,6 +1,4 @@
-
-
-//Handle SIGNUP form via AJAX
+//handle SIGNUP form via AJAX
 const signupForm = document.getElementById("signupForm");
 const signupMsg = document.getElementById("signupMsg");
 
