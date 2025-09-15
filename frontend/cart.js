@@ -17,7 +17,7 @@ function renderCart(data) {
   const cartList = document.getElementById("cart-items");
   if (!cartList) return;
 
-  //save previously checked items
+  // save previously checked items
   const prevSelected = JSON.parse(sessionStorage.getItem("cartSelected") || "{}");
 
   cartList.innerHTML = "";
@@ -89,6 +89,7 @@ function renderCart(data) {
     });
   });
 
+<<<<<<< HEAD
   // Proceed to Checkout button
   let checkoutBtn = document.getElementById("checkoutBtn");
   if (!checkoutBtn) {
@@ -116,6 +117,8 @@ function renderCart(data) {
   };
 
 
+=======
+>>>>>>> 4cd1c6b8688da4f9996cc4e8715f2a098a045e2a
   updateCartTotal();
 }
 
@@ -134,6 +137,26 @@ function updateCartTotal() {
   totalEl.textContent = "₱" + grand.toFixed(2);
 }
 
+// Attach checkout button event once
+document.addEventListener("DOMContentLoaded", () => {
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", () => {
+      const selected = {};
+      document.querySelectorAll("#cart-items .checkout-item:checked").forEach(cb => {
+        selected[cb.dataset.id] = 1;
+      });
+
+      if (!Object.keys(selected).length) {
+        alert("Please select at least one product to checkout.");
+        return;
+      }
+
+      sessionStorage.setItem("checkoutSelected", JSON.stringify(selected));
+      window.location.href = "checkout.html";
+    });
+  }
+});
 
 // Initial load
 updateCart("none");
