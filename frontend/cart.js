@@ -106,7 +106,7 @@ function renderCart(data) {
         const li = cb.parentElement;
         const qtyText = li.querySelector("span").textContent.match(/× (\d+)/);
         const qty = qtyText ? parseInt(qtyText[1], 10) : 1;
-        selected[cb.dataset.id] = qty; // <-- store actual quantity
+        selected[cb.dataset.id] = qty;
     });
     sessionStorage.setItem("checkoutSelected", JSON.stringify(selected));
     window.location.href = "checkout.html";

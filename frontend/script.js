@@ -31,9 +31,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     fetchProducts();
 
-
-
-    // Filter by category
+    //filter by category
     const categorySelect = document.getElementById("category-select");
     if (categorySelect) {
       categorySelect.addEventListener("change", () => {
@@ -43,18 +41,20 @@
     }
   });
 
+function fetchProducts(category = "") {
+  let url = "http://localhost/rytm/backend/products.php";
+  if (category && category !== "all") {
+    url += "?category=" + encodeURIComponent(category);
+  }
 
-
-  // Fetch PRODUCTS from backend/products.php
-  function fetchProducts(category = "all") {
-    fetch("http://localhost/rytm/backend/products.php?category=" + category)
-      .then(res => res.json())
-      .then(data => {
-        console.log("Fetched:", data);
-        displayProducts(data);
-      })
-      .catch(err => console.error("Fetch error:", err));
-    }
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      console.log("Fetched:", data);
+      displayProducts(data);
+    })
+    .catch(err => console.error("Fetch error:", err));
+}
 
 
   // Render products in the container

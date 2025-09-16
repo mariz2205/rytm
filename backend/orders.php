@@ -28,6 +28,27 @@ $orders = [];
 while ($order = $result->fetch_assoc()) {
     $orderId = $order['OrderID'];
 
+    $orderDate = new DateTime($order['OrderDate']);
+    $today = new DateTime();
+    $daysPassed = $orderDate->diff($today)->days;
+
+    if ($daysPassed < 1) {
+        $newStatus = "Pending";       
+    } elseif ($daysPassed <= 2) {
+        $newStatus = "Shipping";       
+    } else {
+        $newStatus = "Delivered";     
+    }
+
+    // If DB status is different, update it
+    if ($order['OrderStatus'] !== $newStatus) {
+        $updateStmt = $conn->prepare("UPDATE orderlist SET OrderStatus = ? WHERE OrderID = ?");
+        $updateStmt->bind_param("si", $newStatus, $orderId);
+        $updateStmt->execute();
+        $updateStmt->close();
+        $order['OrderStatus'] = $newStatus; // Reflect updated value in output
+    }
+
     // Fetch items for this order
     $stmtItems = $conn->prepare("
         SELECT oi.ProductID, oi.ProdOrdQty AS OrderQuantity, oi.ProductPrice,

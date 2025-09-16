@@ -1,4 +1,3 @@
-//handle SIGNUP form via AJAX
 const signupForm = document.getElementById("signupForm");
 const signupMsg = document.getElementById("signupMsg");
 
@@ -15,7 +14,6 @@ if (signupForm) {
         credentials: "include"
       });
 
-      // Try to parse JSON
       const data = await res.json();
       console.log("Signup response:", data);
 
