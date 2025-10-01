@@ -3,99 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - RYTM</title>
+  <title>Admin Panel</title>
   <link rel="stylesheet" href="admin.css">
 </head>
 <body>
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Admin</h2>
+      <ul>
+        <li><a href="#" onclick="loadSection('dashboard')">Dashboard</a></li>
+        <li><a href="#" onclick="loadSection('products')">Products</a></li>
+        <li><a href="#" onclick="loadSection('orders')">Orders</a></li>
+        <li><a href="#" onclick="loadSection('users')">Users</a></li>
+        <li><a href="#" onclick="loadSection('settings')">Settings</a></li>
+      </ul>
+    </aside>
 
-  <aside>
-    <h2>RYTM Admin</h2>
-    <a href="#dashboard">📊 Dashboard</a>
-    <a href="#products">📦 Products</a>
-    <a href="#orders">🛒 Orders</a>
-    <a href="#users">👥 Users</a>
-    <a href="#settings">⚙️ Settings</a>
-  </aside>
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Dashboard -->
+      <section id="dashboardSection" class="section active">
+        <h1>Dashboard</h1>
+        <p>Welcome to the admin panel. Choose a section from the sidebar.</p>
+      </section>
 
-  <main>
-    <header>
-      <h1>Admin Dashboard</h1>
-    </header>
+      <!-- Products -->
+      <section id="productsSection" class="section">
+        <div class="section-header">
+          <h1>Products</h1>
+          <button id="addProductBtn" class="btn btn-add">+ Add Product</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Image</th>
+              <th>Category</th>
+              <th>Stock</th>
+              <th>Price</th>
+              <th>Seller</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody">
+          </tbody>
+        </table>
+      </section>
 
-    <!-- Dashboard Section -->
-    <section id="dashboard" class="section">
-      <h2>Overview</h2>
-      <p>Quick stats here (e.g. total sales, products, users).</p>
-    </section>
+      <!-- Orders -->
+      <section id="ordersSection" class="section">
+        <h1>Orders</h1>
+        <p>Orders management coming soon...</p>
+      </section>
 
-    <!-- Products Section -->
-    <section id="products" class="section">
-      <h2>Manage Products</h2>
-      <button class="btn btn-add">+ Add Product</button>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th><th>Name</th><th>Price</th><th>Stock</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="productTable">
-          <tr>
-            <td>1</td><td>Acoustic Guitar</td><td>₱5000</td><td>10</td>
-            <td>
-              <button class="btn btn-edit">Edit</button>
-              <button class="btn btn-delete">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+      <!-- Users -->
+      <section id="usersSection" class="section">
+        <h1>Users</h1>
+        <p>Users management coming soon...</p>
+      </section>
 
-    <!-- Orders Section -->
-    <section id="orders" class="section">
-      <h2>Manage Orders</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Order ID</th><th>Customer</th><th>Status</th><th>Total</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1001</td><td>Juan Dela Cruz</td><td>Pending</td><td>₱7500</td>
-            <td><button class="btn btn-edit">Update</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+      <!-- Settings -->
+      <section id="settingsSection" class="section">
+        <h1>Settings</h1>
+        <p>Settings options coming soon...</p>
+      </section>
+    </main>
+  </div>
 
-    <!-- Users Section -->
-    <section id="users" class="section">
-      <h2>Manage Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>User ID</th><th>Name</th><th>Email</th><th>Role</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>U001</td><td>Ana Santos</td><td>ana@email.com</td><td>Customer</td>
-            <td>
-              <button class="btn btn-edit">Edit</button>
-              <button class="btn btn-delete">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+  <!--add and edit-->
+  <div id="productModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Add Product</h2>
+      <form id="productForm">
+        <input type="hidden" id="prodId">
 
-    <!-- Settings Section -->
-    <section id="settings" class="section">
-      <h2>Settings</h2>
-      <p>Admin configurations here.</p>
-    </section>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="prodName" required>
+        </div>
 
-  </main>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="prodDesc" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Image</label>
+          <input type="file" id="prodImageFile" accept="image/*">
+          <input type="hidden" id="prodImage"> 
+          <img id="imagePreview" style="display:none; width:100px; margin-top:10px;">
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <input type="text" id="prodCategory">
+        </div>
+
+        <div class="form-group">
+          <label>Stock</label>
+          <input type="number" id="prodStock" required>
+        </div>
+
+        <div class="form-group">
+          <label>Price</label>
+          <input type="number" step="0.01" id="prodPrice" required>
+        </div>
+
+        <div class="form-group">
+          <label>Seller ID</label>
+          <input type="text" id="prodSeller">
+        </div>
+
+        <button type="submit" class="btn btn-save">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+<div id="confirmModal" class="modal hidden">
+  <div class="modal-content">
+    <h2 id="confirmMessage">Are you sure?</h2>
+    <div class="modal-actions">
+      <button id="confirmYes" class="btn btn-delete">Yes</button>
+      <button id="confirmNo" class="btn btn-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
 
   <script src="admin.js"></script>
 </body>

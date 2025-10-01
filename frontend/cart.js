@@ -47,15 +47,30 @@ function renderCart(data) {
     img.className = "cart-img";
 
     // Description & subtotal
-    const span = document.createElement("span");
-    span.textContent = `${item.name} - ₱${item.price} × ${item.qty} = ₱${item.subtotal}`;
+    const info = document.createElement("div");
+    info.className = "cart-info";
+    info.textContent = `${item.name}`;
 
-    // Quantity buttons
+    const priceSpan = document.createElement("div");
+    priceSpan.className = "product-price";
+    priceSpan.textContent =`₱${item.price}`;
+
+    const subtotalSpan = document.createElement("div");
+    subtotalSpan.className = "product-subtotal";
+    subtotalSpan.textContent = `Subtotal: ₱${item.subtotal}`;
+
+    const qtyControls = document.createElement("div");
+    qtyControls.className = "qty-controls";
+
     const minusBtn = document.createElement("button");
     minusBtn.textContent = "-";
     minusBtn.addEventListener("click", () => {
       if (item.qty > 1) updateCart("update", item.id, item.qty - 1);
     });
+
+    const qtyDisplay = document.createElement("span");
+    qtyDisplay.textContent = item.qty;
+    qtyDisplay.className = "qty-display";
 
     const plusBtn = document.createElement("button");
     plusBtn.textContent = "+";
@@ -63,16 +78,23 @@ function renderCart(data) {
       updateCart("update", item.id, item.qty + 1);
     });
 
+    qtyControls.appendChild(minusBtn);
+    qtyControls.appendChild(qtyDisplay);
+    qtyControls.appendChild(plusBtn);
+
     const removeBtn = document.createElement("button");
     removeBtn.textContent = "Remove";
     removeBtn.addEventListener("click", () => updateCart("remove", item.id));
 
     li.appendChild(checkbox);
     li.appendChild(img);
-    li.appendChild(span);
-    li.appendChild(minusBtn);
-    li.appendChild(plusBtn);
+    li.appendChild(info);
+    li.appendChild(qtyControls);
     li.appendChild(removeBtn);
+    info.appendChild(priceSpan)
+    info.appendChild(subtotalSpan);
+
+
 
     cartList.appendChild(li);
   });
@@ -121,14 +143,20 @@ function updateCartTotal() {
   if (!totalEl) return;
 
   let grand = 0;
+
   document.querySelectorAll("#cart-items .checkout-item:checked").forEach(cb => {
-    const span = cb.parentElement.querySelector("span");
-    const match = span.textContent.match(/= ₱([\d.,]+)/);
-    if (match) grand += parseFloat(match[1].replace(/,/g, ""));
+    const subtotalEl = cb.parentElement.querySelector(".product-subtotal");
+    if (subtotalEl) {
+      const match = subtotalEl.textContent.match(/₱([\d.,]+)/);
+      if (match) {
+        grand += parseFloat(match[1].replace(/,/g, ""));
+      }
+    }
   });
 
   totalEl.textContent = "₱" + grand.toFixed(2);
 }
+
 
 // Attach checkout button event once
 document.addEventListener("DOMContentLoaded", () => {

@@ -46,7 +46,7 @@ while ($order = $result->fetch_assoc()) {
         $updateStmt->bind_param("si", $newStatus, $orderId);
         $updateStmt->execute();
         $updateStmt->close();
-        $order['OrderStatus'] = $newStatus; // Reflect updated value in output
+        $order['OrderStatus'] = $newStatus; 
     }
 
     // Fetch items for this order

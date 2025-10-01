@@ -140,6 +140,14 @@ h3, .btn, .btn-secondary {
   left: 3px;
 }
 
+p:has(#cart-total) {
+  text-align: right;
+  font-weight: 700;
+  font-size: 18px;
+  margin-right: 350px;
+}
+
+
 @media (max-width: 768px) {
   .cart-table th, .cart-table td {
     padding: 8px;
@@ -171,4 +179,69 @@ h3, .btn, .btn-secondary {
 .sidebar-button:hover {
   background-color: #FFD700;
   color: #1a1a1a;
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #2a2a2a;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+}
+
+.qty-controls button {
+  background-color: #444;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 4px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.2s ease;
+}
+
+.qty-controls button:hover {
+  background-color: #C62828;
+}
+
+.qty-display {
+  font-weight: bold;
+  color: #FFD700;
+  min-width: 20px;
+  text-align: center;
+}
+
+.cart-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.name-price {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 16px;
+  color: #FFD700;
+}
+
+.product-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price {
+  margin-left: 0px;
+  white-space: nowrap;
+}
+
+.product-subtotal {
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 4px;
 }
