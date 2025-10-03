@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 01, 2025 at 03:31 PM
+-- Generation Time: Oct 03, 2025 at 10:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -84,7 +84,11 @@ INSERT INTO `orderitems` (`OrderItemID`, `OrderID`, `ProductID`, `ProdOrdQty`, `
 (18, 24, 15, 1, 100.00),
 (19, 25, 4, 1, 5800.00),
 (20, 26, 13, 1, 150.00),
-(21, 27, 3, 2, 2900.00);
+(21, 27, 3, 2, 2900.00),
+(22, 28, 12, 1, 300.00),
+(23, 29, 2, 1, 3500.00),
+(24, 30, 4, 1, 5800.00),
+(25, 31, 1, 1, 3200.00);
 
 -- --------------------------------------------------------
 
@@ -109,7 +113,7 @@ CREATE TABLE `orderlist` (
 INSERT INTO `orderlist` (`OrderID`, `CustomerID`, `TotalAmount`, `TotalOrderQty`, `OrderDate`, `OrderStatus`, `DeliveryDate`) VALUES
 (1, 4, 26700.00, 9, '2025-09-14', 'Pending', '2025-09-17'),
 (2, 4, 0.00, 0, '2025-09-14', 'Pending', '2025-09-17'),
-(3, 4, 3200.00, 1, '2025-09-14', 'Pending', '2025-09-17'),
+(3, 4, 3200.00, 1, '2025-09-14', 'Shipping', '2025-09-17'),
 (4, 4, 3500.00, 1, '2025-09-14', 'Pending', '2025-09-17'),
 (5, 4, 3200.00, 1, '2025-09-14', 'Pending', '2025-09-17'),
 (6, 4, 0.00, 0, '2025-09-14', 'Pending', '2025-09-17'),
@@ -119,21 +123,25 @@ INSERT INTO `orderlist` (`OrderID`, `CustomerID`, `TotalAmount`, `TotalOrderQty`
 (10, 4, 0.00, 0, '2025-09-14', 'Pending', '2025-09-17'),
 (11, 4, 0.00, 0, '2025-09-14', 'Pending', '2025-09-17'),
 (12, 4, 3500.00, 1, '2025-09-14', 'Pending', '2025-09-17'),
-(13, 5, 6400.00, 2, '2025-09-15', 'Pending', '2025-09-18'),
-(14, 5, 0.00, 0, '2025-09-15', 'Pending', '2025-09-18'),
-(15, 5, 3500.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
-(16, 5, 8700.00, 2, '2025-09-15', 'Pending', '2025-09-18'),
-(17, 5, 100.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
-(18, 5, 3500.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
-(19, 5, 11600.00, 2, '2025-09-15', 'Pending', '2025-09-18'),
-(20, 5, 3500.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
-(21, 5, 11600.00, 2, '2025-09-15', 'Pending', '2025-09-18'),
-(22, 5, 3500.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
-(23, 5, 5800.00, 2, '2025-09-15', 'Pending', '2025-09-18'),
-(24, 5, 100.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
-(25, 5, 5800.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
-(26, 5, 150.00, 1, '2025-09-15', 'Pending', '2025-09-18'),
-(27, 5, 5800.00, 2, '2025-09-15', 'Pending', '2025-09-18');
+(13, 5, 6400.00, 2, '2025-09-15', 'Delivered', '2025-09-18'),
+(14, 5, 0.00, 0, '2025-09-15', 'Delivered', '2025-09-18'),
+(15, 5, 3500.00, 1, '2025-09-15', 'Delivered', '2025-09-18'),
+(16, 5, 8700.00, 2, '2025-09-15', 'Delivered', '2025-09-18'),
+(17, 5, 100.00, 1, '2025-09-15', 'Delivered', '2025-09-18'),
+(18, 5, 3500.00, 1, '2025-09-15', 'Delivered', '2025-09-18'),
+(19, 5, 11600.00, 2, '2025-09-15', 'Delivered', '2025-09-18'),
+(20, 5, 3500.00, 1, '2025-09-15', 'Delivered', '2025-09-18'),
+(21, 5, 11600.00, 2, '2025-09-15', 'Delivered', '2025-09-18'),
+(22, 5, 3500.00, 1, '2025-09-15', 'Delivered', '2025-09-18'),
+(23, 5, 5800.00, 2, '2025-09-15', 'Delivered', '2025-09-18'),
+(24, 5, 100.00, 1, '2025-09-15', 'Delivered', '2025-09-18'),
+(25, 5, 5800.00, 1, '2025-09-15', 'Delivered', '2025-09-18'),
+(26, 5, 150.00, 1, '2025-09-15', 'Delivered', '2025-09-18'),
+(27, 5, 5800.00, 2, '2025-09-15', 'Delivered', '2025-09-18'),
+(28, 5, 300.00, 1, '2025-10-03', 'Accepted', '2025-10-06'),
+(29, 5, 3500.00, 1, '2025-10-03', 'Delivered', '2025-10-06'),
+(30, 5, 5800.00, 1, '2025-10-03', 'Accepted', '2025-10-06'),
+(31, 5, 3200.00, 1, '2025-10-03', 'Shipping', '2025-10-06');
 
 -- --------------------------------------------------------
 
@@ -176,10 +184,10 @@ CREATE TABLE `productdetails` (
 --
 
 INSERT INTO `productdetails` (`ProductID`, `ProductDescription`, `ProductName`, `Image`, `Category`, `Stock`, `ProductPrice`, `SellerID`) VALUES
-(1, 'A rich, full-sounding 12-string dreadnought ideal for experienced players.', 'Takamine GD37CE 12-String', 'product1.jpg', 'Acoustic', 102, 3200.00, 'SEID1324'),
+(1, 'A rich, full-sounding 12-string dreadnought ideal for experienced players.', 'Takamine GD37CE 12-String', 'product1.jpg', 'Acoustic', 100, 3200.00, 'SEID1324'),
 (2, 'A classic black Fender acoustic—great for both beginners and intermediate players.', 'Fender CD-60S- Black', 'product2.jpg', 'Acoustic', 76, 3500.00, 'SEID1324'),
 (3, 'Compact dreadnought design, ideal for younger players or travelers.', 'Oscar Schmidt OG1P-A 3/4 ', 'product3.jpg', 'Acoustic', 89, 2900.00, 'SEID1324'),
-(4, 'A sleek, beginner-friendly electric guitar with a classic Strat shape.', 'Dimavery ST-312 Electric ', 'product4.jpg', 'Electric', 61, 5800.00, 'SEID1324'),
+(4, 'A sleek, beginner-friendly electric guitar with a classic Strat shape.', 'Dimavery ST-312 Electric ', 'product4.jpg', 'Electric', 60, 5800.00, 'SEID1324'),
 (5, 'A premium Stratocaster with Clapton signature sound and feel.', 'Fender Artist Series Eric', 'product5.jpg', 'Electric', 47, 6900.00, 'SEID1324'),
 (6, 'Bold design and premium build for modern electric guitarists.', 'JS-380 Roasted Poplar Bod', 'product6.jpg', 'Electric', 38, 7500.00, 'SEID1324'),
 (7, 'Colorful soprano ukulele—perfect for casual strumming or learning.', 'Ukulele 21 inch (Soprano)', 'product7.jpg', 'Ukulele', 85, 400.00, 'SEID1324'),
@@ -233,7 +241,7 @@ CREATE TABLE `shoppingcart` (
 --
 
 INSERT INTO `shoppingcart` (`CartID`, `CustomerID`, `ProductName`, `Quantity`, `ProductPrice`, `ProductID`) VALUES
-(19, 5, 'Fender CD-60S- Black', 1, 3500.00, 2);
+(20, 5, 'Oscar Schmidt OG1P-A 3/4 ', 2, 2900.00, 3);
 
 --
 -- Indexes for dumped tables
@@ -301,13 +309,13 @@ ALTER TABLE `customerdetails`
 -- AUTO_INCREMENT for table `orderitems`
 --
 ALTER TABLE `orderitems`
-  MODIFY `OrderItemID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `OrderItemID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `orderlist`
 --
 ALTER TABLE `orderlist`
-  MODIFY `OrderID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `OrderID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `productdetails`
@@ -319,7 +327,7 @@ ALTER TABLE `productdetails`
 -- AUTO_INCREMENT for table `shoppingcart`
 --
 ALTER TABLE `shoppingcart`
-  MODIFY `CartID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `CartID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Constraints for dumped tables
