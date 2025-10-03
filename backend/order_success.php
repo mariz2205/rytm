@@ -12,7 +12,10 @@ if (!$orderId) {
 
 // Fetch order summary
 $stmt = $conn->prepare("
-    SELECT CustomerID, TotalAmount, TotalOrderQty, OrderStatus, OrderDate, DeliveryDate
+    SELECT CustomerID, TotalAmount, TotalOrderQty, 
+           COALESCE(OrderStatus, 'Pending') AS OrderStatus, 
+           OrderDate, 
+           COALESCE(DeliveryDate, 'N/A') AS DeliveryDate
     FROM orderlist
     WHERE OrderID = ?
     LIMIT 1
@@ -29,7 +32,8 @@ if (!$orderSummary) {
 
 // Fetch order items
 $stmt = $conn->prepare("
-    SELECT oi.ProductID, p.ProductName, oi.ProdOrdQty AS OrderQuantity, oi.ProductPrice, p.Image
+    SELECT oi.ProductID, p.ProductName, oi.ProdOrdQty AS OrderQuantity, 
+           oi.ProductPrice, p.Image
     FROM orderitems oi
     JOIN productdetails p ON oi.ProductID = p.ProductID
     WHERE oi.OrderID = ?

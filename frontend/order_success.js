@@ -31,19 +31,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <td><img src="../img/products/${item.Image}" alt="${item.ProductName}" width="80"></td>
                 <td>${item.ProductName}</td>
                 <td>${qty}</td>
-                <td>₱${price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                <td>₱${subtotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                <td>₱${price.toLocaleString("en-PH", {minimumFractionDigits: 2})}</td>
+                <td>₱${subtotal.toLocaleString("en-PH", {minimumFractionDigits: 2})}</td>
             `;
             tableBody.appendChild(tr);
         });
 
         const checkout = data.checkout;
         document.getElementById("order-id").textContent = orderId;
-        document.getElementById("order-status").textContent = checkout.OrderStatus;
+        document.getElementById("order-status").textContent = checkout.OrderStatus || "Pending";
         document.getElementById("order-date").textContent = checkout.OrderDate;
-        document.getElementById("delivery-date").textContent = checkout.DeliveryDate;
+        document.getElementById("delivery-date").textContent = checkout.DeliveryDate || "N/A";
         document.getElementById("total-amount").textContent =
-            "₱" + total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            "₱" + total.toLocaleString("en-PH", { minimumFractionDigits: 2 });
 
     } catch (err) {
         console.error(err);

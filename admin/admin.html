@@ -56,8 +56,46 @@
       <!-- Orders -->
       <section id="ordersSection" class="section">
         <h1>Orders</h1>
-        <p>Orders management coming soon...</p>
+
+        <div class="orders-controls" style="margin-bottom:12px;">
+          <button class="btn" onclick="fetchOrders()">Refresh Orders</button>
+        </div>
+
+        <table id="ordersTable">
+          <thead>
+            <tr>
+              <th>OrderID</th>
+              <th>CustomerID</th>
+              <th>Order Date</th>
+              <th>Total Qty</th>
+              <th>Total Amount</th>
+              <th>Order Status</th>
+              <th>Delivery Date</th>
+              <th>Items</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <!-- populated by admin.js -->
+          </tbody>
+        </table>
+
+        <p id="ordersEmpty" style="display:none; margin-top:12px;">No orders yet.</p>
+
+        <!-- Message Modal (success / error) -->
+        <div id="msgModal" class="modal hidden" aria-hidden="true">
+          <div class="modal-content">
+            <button class="close-btn" onclick="hideMsg()">&times;</button>
+            <h3 id="msgTitle"></h3>
+            <p id="msgBody"></p>
+            <div style="margin-top:12px;">
+              <button class="btn btn-cancel" onclick="hideMsg()">OK</button>
+            </div>
+          </div>
+        </div>
+
       </section>
+
 
       <!-- Users -->
       <section id="usersSection" class="section">
