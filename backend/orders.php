@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "db.php";
+include "auto_received.php"; // This will auto-update old delivered orders
 
 header("Content-Type: application/json");
 
@@ -28,7 +29,7 @@ $orders = [];
 while ($order = $result->fetch_assoc()) {
     $orderId = $order['OrderID'];
 
-    // Fetch items for this order
+    // Fetch order items
     $stmtItems = $conn->prepare("
         SELECT oi.ProductID, oi.ProdOrdQty AS OrderQuantity, oi.ProductPrice,
                p.ProductName, p.Image
@@ -53,3 +54,5 @@ while ($order = $result->fetch_assoc()) {
 $stmt->close();
 
 echo json_encode(["success" => true, "orders" => $orders]);
+
+?>

@@ -167,6 +167,36 @@ a.btn:hover {
   margin-top: 5px;
 }
 
+.order-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.receive-btn {
+  background-color: #FFD700;
+  color: #121212;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.receive-btn:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.receive-btn.received {
+  background-color: #666;
+  color: #ccc;
+  cursor: default;
+  transform: none;
+}
+
+
 /*responsive */
 @media (max-width: 768px) {
   header {

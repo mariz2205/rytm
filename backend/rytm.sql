@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 03, 2025 at 10:19 AM
+-- Generation Time: Oct 06, 2025 at 07:17 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -208,18 +208,19 @@ INSERT INTO `productdetails` (`ProductID`, `ProductDescription`, `ProductName`, 
 
 CREATE TABLE `sellerinfo` (
   `SellerID` varchar(10) NOT NULL,
-  `SellerLN` varchar(25) NOT NULL,
-  `SellerFN` varchar(25) NOT NULL,
+  `SellerUsername` varchar(25) NOT NULL,
+  `SellerName` varchar(255) NOT NULL,
   `SellerEmail` varchar(25) NOT NULL,
-  `SellerContactNo` varchar(25) NOT NULL
+  `SellerContactNo` varchar(25) NOT NULL,
+  `SellerPassword` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sellerinfo`
 --
 
-INSERT INTO `sellerinfo` (`SellerID`, `SellerLN`, `SellerFN`, `SellerEmail`, `SellerContactNo`) VALUES
-('SEID1324', 'macasa', 'mariz', 'marizmacasa22@gmail.com', '09772115151');
+INSERT INTO `sellerinfo` (`SellerID`, `SellerUsername`, `SellerName`, `SellerEmail`, `SellerContactNo`, `SellerPassword`) VALUES
+('S4745', 'rytmadminmariz', 'Mariz Macasa', 'rytmmariz@gmail.com', '09273980237', 'rytmadminmariz');
 
 -- --------------------------------------------------------
 

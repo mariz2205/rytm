@@ -1,3 +1,28 @@
+  //session
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const sellerNameEl = document.getElementById("sellername");
+    const sellerUsernameEl = document.getElementById("sellerusername");
+
+    fetch("../backend/session.php", {
+      method: "GET",
+      credentials: "include"
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.loggedIn && data.type === "seller") {
+          sellerNameEl.textContent = data.sellername || "Admin";
+          sellerUsernameEl.textContent = data.sellerusername || "";
+        } 
+      })  
+      .catch(err => {
+        console.error("Session check failed:", err);
+        window.location.href = "adminlogin.html";
+      });
+  });
+
+
+
 // Sidebar Navigation
 const navLinks = document.querySelectorAll(".nav-link");
 const sections = document.querySelectorAll(".section");
@@ -171,14 +196,13 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
   }
 });
 
-
-// Delete product
+// DELETE product
 function deleteProduct(id) {
   if (!id) return alert("Missing product ID");
 
   showConfirm("Are you sure you want to delete this product?", async () => {
     try {
-      const res = await fetch("http://localhost/rytm/backend/admin.php", {
+      const res = await fetch("http://localhost/rytm/backend/admin.php?type=products", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: id })
@@ -197,6 +221,33 @@ function deleteProduct(id) {
     }
   });
 }
+
+async function deleteOrder(orderId) {
+  if (!orderId) return;
+  if (!confirm(`Are you sure you want to delete Order #${orderId}?`)) return;
+
+  try {
+    const res = await fetch("http://localhost/rytm/backend/admin.php?type=orders", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: orderId })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      alert(`Order #${orderId} deleted successfully.`);
+      fetchOrders(); // refresh list
+    } else {
+      alert("Delete failed: " + (data.error || "Unknown error"));
+    }
+  } catch (err) {
+    console.error("Delete order error:", err);
+    alert("Network error deleting order");
+  }
+}
+
+
+
 
 // Hook Add button
 document.getElementById("addProductBtn").addEventListener("click", () => openModal());
@@ -277,7 +328,7 @@ async function fetchOrders() {
       const itemsHtml = order.items.map(it => {
         return `<div style="margin-bottom:4px;">
                   <strong>${it.ProductName}</strong> (x${it.ProdOrdQty}) 
-                  <span style="font-size:12px;color:#666;">₱${it.ProductPrice}</span>
+                  <span style="font-size:12px;color:#777;">₱${it.ProductPrice}</span>
                 </div>`;
       }).join("");
 
@@ -295,8 +346,10 @@ async function fetchOrders() {
         actionHtml = `<button class="btn" onclick="updateOrderStatus(${order.OrderID}, 'Delivered')">Set Delivered</button>`;
       } else if (status === "delivered") {
         actionHtml = `<span style="color:green;font-weight:bold">Delivered</span>`;
+      } else if (status === "received") {
+        actionHtml = `<span style="color:blue;font-weight:bold">Received</span>`;
       } else {
-        actionHtml = `<button class="btn btn-edit" onclick="updateOrderStatus(${order.OrderID}, 'Accepted')">Accept</button>`;
+        actionHtml = `<span style="color:#999;">Unknown</span>`;
       }
 
       tr.innerHTML = `
@@ -380,3 +433,36 @@ function openOrdersSection() {
   fetchOrders();
 }
 window.openOrdersSection = openOrdersSection;
+
+
+
+async function fetchUsers() {
+  const tableBody = document.querySelector('#usersTableBody');
+  tableBody.innerHTML = '';
+
+  try {
+    const res = await fetch('http://localhost/rytm/backend/admin.php?type=users');
+    const data = await res.json();
+
+    if (data.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No users found</td></tr>`;
+      return;
+    }
+
+    data.forEach(user => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${user.CustomerID}</td>
+        <td>${user.Username}</td>
+        <td>${user.FirstName} ${user.LastName}</td>
+        <td>${user.Email}</td>
+        <td>${user.ContactNo}</td>
+        <td>${user.Address}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error('Failed to fetch users', err);
+  }
+}
+

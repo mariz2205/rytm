@@ -29,6 +29,22 @@ function fetchOrders() {
           `;
         });
 
+        // Determine button display
+        let receiveBtnHTML = "";
+        if (order.OrderStatus.toLowerCase() === "delivered") {
+          receiveBtnHTML = `
+            <button class="receive-btn" data-order-id="${order.OrderID}">
+              Receive
+            </button>
+          `;
+        } else if (order.OrderStatus.toLowerCase() === "received") {
+          receiveBtnHTML = `
+            <button class="receive-btn received" disabled>
+              Received
+            </button>
+          `;
+        }
+
         card.innerHTML = `
           <h3>Order #${order.OrderID}</h3>
           <p>Status: ${order.OrderStatus}</p>
@@ -37,13 +53,51 @@ function fetchOrders() {
           <p><strong>Total Qty:</strong> ${order.TotalOrderQty}</p>
           <p><strong>Total Amount:</strong> ₱${Number(order.TotalAmount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</p>
           <div class="order-items">${itemsHTML}</div>
+          <div class="order-actions">${receiveBtnHTML}</div>
         `;
+        a
         container.appendChild(card);
       });
+
+      // Add event listener for receive button
+      document.querySelectorAll(".receive-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const orderId = e.target.getAttribute("data-order-id");
+          if (confirm(`Mark Order #${orderId} as received?`)) {
+            receiveOrder(orderId);
+          }
+        });
+      });
+
     })
     .catch(err => { 
       console.error("Orders fetch error:", err);
       document.getElementById("orders-container").textContent = "Error loading orders.";
+    });
+}
+
+function receiveOrder(orderId) {
+  fetch("../backend/received_update.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ OrderID: orderId }),
+    credentials: "include"
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      if (data.success) {
+        const btn = document.querySelector(`.receive-btn[data-order-id="${orderId}"]`);
+        if (btn) {
+          btn.textContent = "Received";
+          btn.disabled = true;
+          btn.classList.add("received");
+        }
+      }
+    })
+    .catch(err => {
+      console.error("Receive order error:", err);
+      alert("Error updating order status.");
     });
 }
 

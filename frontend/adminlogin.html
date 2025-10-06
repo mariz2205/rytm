@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+  <div class="login-container">
+    <h1>Admin</h1>
+    <form id="loginForm">
+      <input type="adminid" id="sellerid" name="adminid" placeholder="Admin ID" required>
+      <input type="username" id="sellerusername" name="username" placeholder="Admin Username" required>
+      <input type="password" id="sellerpassword" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+
+    <p id="loginMessage" class="error-msg" style="display:none;"></p>
+  </div>
+
+  <script src="adminlogin.js"></script>
+</body>
+</html>

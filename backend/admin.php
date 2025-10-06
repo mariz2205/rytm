@@ -1,10 +1,13 @@
 <?php
+
+session_start();
+
 // Prevent PHP warnings/notices from breaking JSON output shown to frontend
 ini_set('display_errors', '0');
 error_reporting(0);
 
+
 header("Content-Type: application/json; charset=utf-8");
-header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
@@ -16,14 +19,22 @@ if ($method === "OPTIONS") {
 
 include "db.php";
 
+/* AUTO UPDATE: Mark Delivered orders as Received if 2 days passed */
+$conn->query("
+    UPDATE orderlist
+    SET OrderStatus = 'Received'
+    WHERE OrderStatus = 'Delivered'
+    AND DeliveryDate IS NOT NULL
+    AND DeliveryDate <= DATE_SUB(NOW(), INTERVAL 2 DAY)
+");
+
 if ($method === "POST" && isset($_POST["_method"])) {
     $method = strtoupper($_POST["_method"]);
 }
 
-file_put_contents("php_errors.log", print_r($_SERVER, true) . "\n" . file_get_contents("php://input") . "\n\n", FILE_APPEND);
-
-// Check if request is for products or orders
+// Determine if handling products or orders
 $type = $_GET["type"] ?? "products";
+
 
 switch ($type) {
     case "products":
@@ -37,7 +48,7 @@ switch ($type) {
                 echo json_encode($products);
                 break;
 
-            case "POST": // Add product
+            case "POST":
                 $name = $_POST["ProductName"];
                 $desc = $_POST["ProductDescription"];
                 $cat = $_POST["Category"];
@@ -45,24 +56,20 @@ switch ($type) {
                 $price = $_POST["ProductPrice"];
                 $seller = $_POST["SellerID"];
 
-                // Handle image upload
                 $image = $_POST["Image"] ?? "";
+
                 if (isset($_FILES["ImageFile"]) && $_FILES["ImageFile"]["error"] === UPLOAD_ERR_OK) {
                     $image = basename($_FILES["ImageFile"]["name"]);
                     move_uploaded_file($_FILES["ImageFile"]["tmp_name"], "../img/products/" . $image);
                 }
 
-                $stmt = $conn->prepare("INSERT INTO productdetails (ProductName, ProductDescription, Image, Category, Stock, ProductPrice, SellerID) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt = $conn->prepare("INSERT INTO productdetails (ProductName, ProductDescription, Image, Category, Stock, ProductPrice, SellerID) 
+                                        VALUES (?, ?, ?, ?, ?, ?, ?)");
                 $stmt->bind_param("ssssdds", $name, $desc, $image, $cat, $stock, $price, $seller);
-
-                if ($stmt->execute()) {
-                    echo json_encode(["success" => true, "id" => $stmt->insert_id]);
-                } else {
-                    echo json_encode(["success" => false, "error" => $stmt->error]);
-                }
+                echo json_encode(["success" => $stmt->execute(), "id" => $stmt->insert_id]);
                 break;
 
-            case "PUT": // Update product
+            case "PUT":
                 $id = $_POST["ProductID"];
                 $name = $_POST["ProductName"];
                 $desc = $_POST["ProductDescription"];
@@ -72,19 +79,18 @@ switch ($type) {
                 $seller = $_POST["SellerID"];
 
                 $image = $_POST["Image"] ?? "";
+
                 if (isset($_FILES["ImageFile"]) && $_FILES["ImageFile"]["error"] === UPLOAD_ERR_OK) {
                     $image = basename($_FILES["ImageFile"]["name"]);
                     move_uploaded_file($_FILES["ImageFile"]["tmp_name"], "../img/products/" . $image);
                 }
 
-                $stmt = $conn->prepare("UPDATE productdetails SET ProductName=?, ProductDescription=?, Image=?, Category=?, Stock=?, ProductPrice=?, SellerID=? WHERE ProductID=?");
+                $stmt = $conn->prepare("UPDATE productdetails 
+                                        SET ProductName=?, ProductDescription=?, Image=?, Category=?, Stock=?, ProductPrice=?, SellerID=? 
+                                        WHERE ProductID=?");
                 $stmt->bind_param("ssssddsi", $name, $desc, $image, $cat, $stock, $price, $seller, $id);
 
-                if ($stmt->execute()) {
-                    echo json_encode(["success" => true]);
-                } else {
-                    echo json_encode(["success" => false, "error" => $stmt->error]);
-                }
+                echo json_encode(["success" => $stmt->execute()]);
                 break;
 
             case "DELETE":
@@ -102,13 +108,9 @@ switch ($type) {
                     break;
                 }
                 $stmt->bind_param("i", $id);
-                if ($stmt->execute()) {
-                    echo json_encode(["success" => true]);
-                } else {
-                    echo json_encode(["success" => false, "error" => $stmt->error]);
-                }
-                $stmt->close();
+                echo json_encode(["success" => $stmt->execute()]);
                 break;
+
 
             default:
                 http_response_code(405);
@@ -119,7 +121,6 @@ switch ($type) {
     case "orders":
         switch ($method) {
             case "GET":
-                // Join orderlist + orderitems + productdetails + customerdetails
                 $sql = "SELECT 
                             o.OrderID, o.CustomerID, o.TotalAmount, o.TotalOrderQty, 
                             o.OrderDate, o.OrderStatus, o.DeliveryDate,
@@ -216,72 +217,45 @@ switch ($type) {
                     break;
                 }
 
-                // Deduct stock only when moving from Pending → Accepted
-                if (strtolower($status) === "accepted") {
-                    $conn->begin_transaction();
-                    try {
-                        $res = $conn->query("SELECT ProductID, ProdOrdQty FROM orderitems WHERE OrderID=" . intval($id));
-                        while ($row = $res->fetch_assoc()) {
-                            $pid = (int)$row["ProductID"];
-                            $qty = (int)$row["ProdOrdQty"];
-
-                            // Deduct stock safely
-                            $stmt = $conn->prepare("UPDATE productdetails SET Stock = Stock - ? WHERE ProductID=? AND Stock >= ?");
-                            $stmt->bind_param("iii", $qty, $pid, $qty);
-                            $stmt->execute();
-
-                            if ($stmt->affected_rows === 0) {
-                                throw new Exception("Not enough stock for ProductID $pid");
-                            }
-                        }
-
-                        // Update order status
-                        $stmt = $conn->prepare("UPDATE orderlist SET OrderStatus=? WHERE OrderID=?");
-                        $stmt->bind_param("si", $status, $id);
-                        $stmt->execute();
-
-                        $conn->commit();
-                        echo json_encode(["success" => true]);
-                    } catch (Exception $e) {
-                        $conn->rollback();
-                        echo json_encode(["success" => false, "error" => $e->getMessage()]);
-                    }
-                } else {
-                    // For other statuses (Processing, Shipping, Delivered)
-                    $stmt = $conn->prepare("UPDATE orderlist SET OrderStatus=? WHERE OrderID=?");
-                    $stmt->bind_param("si", $status, $id);
-                    if ($stmt->execute()) {
-                        echo json_encode(["success" => true]);
-                    } else {
-                        echo json_encode(["success" => false, "error" => $stmt->error]);
-                    }
-                }
-                break;
-
-            case "DELETE":
-                $input = json_decode(file_get_contents("php://input"), true);
-                $id = $input["id"] ?? ($_GET["id"] ?? null);
-
-                if (!$id) {
-                    echo json_encode(["success" => false, "error" => "Missing OrderID"]);
+                // Prevent admin from modifying already received orders
+                $check = $conn->prepare("SELECT OrderStatus FROM orderlist WHERE OrderID=?");
+                $check->bind_param("i", $id);
+                $check->execute();
+                $checkResult = $check->get_result()->fetch_assoc();
+                if (!$checkResult) {
+                    echo json_encode(["success" => false, "error" => "Order not found"]);
                     break;
                 }
 
-                $conn->begin_transaction();
-                try {
-                    $stmt = $conn->prepare("DELETE FROM orderitems WHERE OrderID=?");
-                    $stmt->bind_param("i", $id);
-                    $stmt->execute();
+                $currentStatus = strtolower($checkResult["OrderStatus"]);
 
-                    $stmt = $conn->prepare("DELETE FROM orderlist WHERE OrderID=?");
-                    $stmt->bind_param("i", $id);
-                    $stmt->execute();
+                if ($currentStatus === "received") {
+                    echo json_encode(["success" => false, "error" => "Cannot modify a received order"]);
+                    break;
+                }
 
-                    $conn->commit();
+                // Allow only forward movement of status
+                $allowedStatuses = ["pending", "accepted", "processing", "shipping", "delivered", "received"];
+                $currentIndex = array_search($currentStatus, $allowedStatuses);
+                $newIndex = array_search(strtolower($status), $allowedStatuses);
+
+                if ($newIndex < $currentIndex) {
+                    echo json_encode(["success" => false, "error" => "Cannot revert order status"]);
+                    break;
+                }
+
+                // Update status
+                $stmt = $conn->prepare("UPDATE orderlist SET OrderStatus=? WHERE OrderID=?");
+                $stmt->bind_param("si", $status, $id);
+
+                if (strtolower($status) === "delivered") {
+                    $conn->query("UPDATE orderlist SET DeliveryDate = NOW() WHERE OrderID = " . intval($id));
+                }
+
+                if ($stmt->execute()) {
                     echo json_encode(["success" => true]);
-                } catch (Exception $e) {
-                    $conn->rollback();
-                    echo json_encode(["success" => false, "error" => $e->getMessage()]);
+                } else {
+                    echo json_encode(["success" => false, "error" => $stmt->error]);
                 }
                 break;
 
@@ -290,6 +264,64 @@ switch ($type) {
                 echo json_encode(["error" => "Method not allowed"]);
         }
         break;
+
+    case "users":
+        switch ($method) {
+            case "GET":
+                $sql = " SELECT 
+                            c.CustomerID,
+                            c.Username,
+                            c.LastName,
+                            c.FirstName,
+                            c.Email,
+                            c.CustomerAddress,
+                            c.ContactNo
+                        FROM customerdetails c
+                        ORDER BY c.CustomerID ";
+                $result = $conn->query($sql);
+                $users = [];
+                while ($row = $result->fetch_assoc()) {
+                    $users[] = $row;
+                }
+                echo json_encode($users);
+                break;
+
+            default:
+                http_response_code(405);  
+                echo json_encode(["error" => "Method not allowed"]);
+        }
+        break;
+
+    case "seller":
+        switch ($method) {
+            case "GET":
+                // Example: fetch current seller info (can also accept ?id=... if needed)
+                $sellerID = $_GET['id'] ?? null;
+
+                if ($sellerID) {
+                    $stmt = $conn->prepare("SELECT SellerID, SellerUsername, SellerName, SellerEmail, SellerContactNo, SellerPassword FROM sellerinfo WHERE SellerID = ?");
+                    $stmt->bind_param("i", $sellerID);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $seller = $result->fetch_assoc();
+                    echo json_encode($seller);
+                } else {
+                    // Fetch all sellers if no ID is passed
+                    $result = $conn->query("SELECT SellerID, SellerUsername, SellerName, SellerEmail, SellerContactNo, SellerPassword FROM sellerinfo");
+                    $sellerinfo = [];
+                    while ($row = $result->fetch_assoc()) {
+                        $sellerinfo[] = $row;
+                    }
+                    echo json_encode($sellerinfo);
+                }
+                break;
+
+        default:
+            http_response_code(405);
+            echo json_encode(["error" => "Method not allowed"]);
+    }
+    break;
+
 
     default:
         http_response_code(400);
