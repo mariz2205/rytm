@@ -166,3 +166,23 @@ a.btn:hover {
     height: 50px;
   }
 }
+
+.btn-home {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  padding: 12px 25px;  
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 16px;  
+  transition: 0.3s;
+  text-decoration: none;     
+  display: inline-block;  
+}
+
+p:has(#total-amount) {
+  text-align: right;
+  font-weight: 700;
+  font-size: 18px;
+
+}
