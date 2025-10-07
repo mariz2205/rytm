@@ -24,8 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $user = $result->fetch_assoc();
 
     if ($user) {
-        // Plain text password comparison
-        if ($password === $user['SellerPassword']) {
+        // Secure password verification
+        if (password_verify($password, $user['SellerPassword'])) {
             $_SESSION['sellerinfo'] = [
                 "sellerid" => $user["SellerID"],
                 "sellername" => $user["SellerName"],
