@@ -457,7 +457,7 @@ async function fetchUsers() {
         <td>${user.FirstName} ${user.LastName}</td>
         <td>${user.Email}</td>
         <td>${user.ContactNo}</td>
-        <td>${user.Address}</td>
+        <td>${user.CustomerAddress}</td>
       `;
       tableBody.appendChild(tr);
     });

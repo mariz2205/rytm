@@ -1,13 +1,10 @@
 <?php
-
-session_start();
-
-// Prevent PHP warnings/notices from breaking JSON output shown to frontend
+// Disable PHP warnings from breaking JSON output
 ini_set('display_errors', '0');
 error_reporting(0);
 
-
 header("Content-Type: application/json; charset=utf-8");
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
@@ -19,7 +16,7 @@ if ($method === "OPTIONS") {
 
 include "db.php";
 
-/* AUTO UPDATE: Mark Delivered orders as Received if 2 days passed */
+/* ✅ AUTO UPDATE: Mark Delivered orders as Received if 2 days passed */
 $conn->query("
     UPDATE orderlist
     SET OrderStatus = 'Received'
@@ -32,11 +29,12 @@ if ($method === "POST" && isset($_POST["_method"])) {
     $method = strtoupper($_POST["_method"]);
 }
 
-// Determine if handling products or orders
+// Determine if handling products, orders, users, or seller
 $type = $_GET["type"] ?? "products";
 
-
 switch ($type) {
+
+    /* ===================== PRODUCTS ===================== */
     case "products":
         switch ($method) {
             case "GET":
@@ -55,7 +53,6 @@ switch ($type) {
                 $stock = $_POST["Stock"];
                 $price = $_POST["ProductPrice"];
                 $seller = $_POST["SellerID"];
-
                 $image = $_POST["Image"] ?? "";
 
                 if (isset($_FILES["ImageFile"]) && $_FILES["ImageFile"]["error"] === UPLOAD_ERR_OK) {
@@ -63,7 +60,7 @@ switch ($type) {
                     move_uploaded_file($_FILES["ImageFile"]["tmp_name"], "../img/products/" . $image);
                 }
 
-                $stmt = $conn->prepare("INSERT INTO productdetails (ProductName, ProductDescription, Image, Category, Stock, ProductPrice, SellerID) 
+                $stmt = $conn->prepare("INSERT INTO productdetails (ProductName, ProductDescription, Image, Category, Stock, ProductPrice, SellerID)
                                         VALUES (?, ?, ?, ?, ?, ?, ?)");
                 $stmt->bind_param("ssssdds", $name, $desc, $image, $cat, $stock, $price, $seller);
                 echo json_encode(["success" => $stmt->execute(), "id" => $stmt->insert_id]);
@@ -77,7 +74,6 @@ switch ($type) {
                 $stock = $_POST["Stock"];
                 $price = $_POST["ProductPrice"];
                 $seller = $_POST["SellerID"];
-
                 $image = $_POST["Image"] ?? "";
 
                 if (isset($_FILES["ImageFile"]) && $_FILES["ImageFile"]["error"] === UPLOAD_ERR_OK) {
@@ -86,10 +82,9 @@ switch ($type) {
                 }
 
                 $stmt = $conn->prepare("UPDATE productdetails 
-                                        SET ProductName=?, ProductDescription=?, Image=?, Category=?, Stock=?, ProductPrice=?, SellerID=? 
+                                        SET ProductName=?, ProductDescription=?, Image=?, Category=?, Stock=?, ProductPrice=?, SellerID=?
                                         WHERE ProductID=?");
                 $stmt->bind_param("ssssddsi", $name, $desc, $image, $cat, $stock, $price, $seller, $id);
-
                 echo json_encode(["success" => $stmt->execute()]);
                 break;
 
@@ -103,14 +98,9 @@ switch ($type) {
                 }
 
                 $stmt = $conn->prepare("DELETE FROM productdetails WHERE ProductID=?");
-                if (!$stmt) {
-                    echo json_encode(["success" => false, "error" => $conn->error]);
-                    break;
-                }
                 $stmt->bind_param("i", $id);
                 echo json_encode(["success" => $stmt->execute()]);
                 break;
-
 
             default:
                 http_response_code(405);
@@ -118,6 +108,7 @@ switch ($type) {
         }
         break;
 
+    /* ===================== ORDERS ===================== */
     case "orders":
         switch ($method) {
             case "GET":
@@ -132,73 +123,12 @@ switch ($type) {
                         JOIN orderitems i ON o.OrderID = i.OrderID
                         JOIN productdetails p ON i.ProductID = p.ProductID
                         ORDER BY o.OrderDate DESC";
-
                 $result = $conn->query($sql);
                 $orders = [];
                 while ($row = $result->fetch_assoc()) {
                     $orders[] = $row;
                 }
                 echo json_encode($orders);
-                break;
-
-            case "POST":
-                // Expect: CustomerID, items[] = [{ProductID, Quantity}]
-                $customerId = $_POST["CustomerID"];
-                $items = json_decode($_POST["items"], true); 
-                if (!$items || !is_array($items)) {
-                    echo json_encode(["success" => false, "error" => "Invalid items"]);
-                    break;
-                }
-
-                $conn->begin_transaction();
-                try {
-                    $totalAmount = 0;
-                    $totalQty = 0;
-
-                    // Insert into orderlist
-                    $stmt = $conn->prepare("INSERT INTO orderlist (CustomerID, TotalAmount, TotalOrderQty, OrderDate, OrderStatus) VALUES (?, 0, 0, NOW(), 'Pending')");
-                    $stmt->bind_param("i", $customerId);
-                    $stmt->execute();
-                    $orderId = $stmt->insert_id;
-
-                    // Insert each item
-                    foreach ($items as $item) {
-                        $pid = $item["ProductID"];
-                        $qty = $item["Quantity"];
-
-                        // Get price
-                        $res = $conn->query("SELECT ProductPrice, Stock FROM productdetails WHERE ProductID=$pid FOR UPDATE");
-                        $prod = $res->fetch_assoc();
-                        if (!$prod || $prod["Stock"] < $qty) {
-                            throw new Exception("Insufficient stock for ProductID $pid");
-                        }
-                        $price = $prod["ProductPrice"];
-                        $lineTotal = $price * $qty;
-
-                        $stmt = $conn->prepare("INSERT INTO orderitems (OrderID, ProductID, ProdOrdQty, ProductPrice) VALUES (?, ?, ?, ?)");
-                        $stmt->bind_param("iiid", $orderId, $pid, $qty, $price);
-                        $stmt->execute();
-
-                        // Deduct stock
-                        $stmt = $conn->prepare("UPDATE productdetails SET Stock = Stock - ? WHERE ProductID=?");
-                        $stmt->bind_param("ii", $qty, $pid);
-                        $stmt->execute();
-
-                        $totalAmount += $lineTotal;
-                        $totalQty += $qty;
-                    }
-
-                    // Update totals
-                    $stmt = $conn->prepare("UPDATE orderlist SET TotalAmount=?, TotalOrderQty=? WHERE OrderID=?");
-                    $stmt->bind_param("dii", $totalAmount, $totalQty, $orderId);
-                    $stmt->execute();
-
-                    $conn->commit();
-                    echo json_encode(["success" => true, "OrderID" => $orderId]);
-                } catch (Exception $e) {
-                    $conn->rollback();
-                    echo json_encode(["success" => false, "error" => $e->getMessage()]);
-                }
                 break;
 
             case "PUT":
@@ -265,10 +195,11 @@ switch ($type) {
         }
         break;
 
+    /* ===================== USERS ===================== */
     case "users":
         switch ($method) {
             case "GET":
-                $sql = " SELECT 
+                $sql = "SELECT 
                             c.CustomerID,
                             c.Username,
                             c.LastName,
@@ -277,7 +208,7 @@ switch ($type) {
                             c.CustomerAddress,
                             c.ContactNo
                         FROM customerdetails c
-                        ORDER BY c.CustomerID ";
+                        ORDER BY c.CustomerID";
                 $result = $conn->query($sql);
                 $users = [];
                 while ($row = $result->fetch_assoc()) {
@@ -292,10 +223,10 @@ switch ($type) {
         }
         break;
 
+    /* ===================== SELLER ===================== */
     case "seller":
         switch ($method) {
             case "GET":
-                // Example: fetch current seller info (can also accept ?id=... if needed)
                 $sellerID = $_GET['id'] ?? null;
 
                 if ($sellerID) {
@@ -306,7 +237,6 @@ switch ($type) {
                     $seller = $result->fetch_assoc();
                     echo json_encode($seller);
                 } else {
-                    // Fetch all sellers if no ID is passed
                     $result = $conn->query("SELECT SellerID, SellerUsername, SellerName, SellerEmail, SellerContactNo, SellerPassword FROM sellerinfo");
                     $sellerinfo = [];
                     while ($row = $result->fetch_assoc()) {
@@ -316,13 +246,13 @@ switch ($type) {
                 }
                 break;
 
-        default:
-            http_response_code(405);
-            echo json_encode(["error" => "Method not allowed"]);
-    }
-    break;
+            default:
+                http_response_code(405);
+                echo json_encode(["error" => "Method not allowed"]);
+        }
+        break;
 
-
+    /* ===================== INVALID TYPE ===================== */
     default:
         http_response_code(400);
         echo json_encode(["error" => "Invalid type"]);

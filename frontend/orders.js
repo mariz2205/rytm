@@ -49,13 +49,13 @@ function fetchOrders() {
           <h3>Order #${order.OrderID}</h3>
           <p>Status: ${order.OrderStatus}</p>
           <p>Order Date: ${order.OrderDate}</p>
-          <p>Delivery Date: ${order.DeliveryDate || "N/A"}</p>  
+          <p>Delivery Date: ${order.DeliveryDate || "N/A"}</p>
           <p><strong>Total Qty:</strong> ${order.TotalOrderQty}</p>
           <p><strong>Total Amount:</strong> ₱${Number(order.TotalAmount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</p>
           <div class="order-items">${itemsHTML}</div>
           <div class="order-actions">${receiveBtnHTML}</div>
         `;
-        a
+
         container.appendChild(card);
       });
 
@@ -68,9 +68,8 @@ function fetchOrders() {
           }
         });
       });
-
     })
-    .catch(err => { 
+    .catch(err => {
       console.error("Orders fetch error:", err);
       document.getElementById("orders-container").textContent = "Error loading orders.";
     });
